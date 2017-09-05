@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>Hello World!</title>
+    <link href="//vjs.zencdn.net/4.10/video-js.css" rel="stylesheet">
+    <script src="//vjs.zencdn.net/4.10/video.js"></script>
+    <style type="text/css">
+      body {
+        background-color: #000;
+      }
+      .portrait {
+        transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+      }
+
+      .landscape {
+        transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <p id="video_player" style="text-align: center"><iframe id="video_iframe" class="video_iframe" style="z-index:1;" src="" allowfullscreen="" frameborder="0"></iframe></p> -->
+    <!-- <p id="video_player" style="text-align: center"><video id="video" class="video" src="" controls="controls" x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-orientation="landscape" autoplay=""></p> -->
+    <div id="video_player" style="text-align: center">
+      <video id="example_video_1" 
+      class="video-js vjs-default-skin vjs-big-play-centered" 
+      width="100%" 
+      height="100%" 
+      preload="auto" 
+      playsinline 
+      controls="controls" 
+      x5-video-player-type="h5" 
+      x5-video-player-fullscreen="true" 
+      x5-video-orientation="landscape">
+        <source src="http://200011375.vod.myqcloud.com/200011375_04e1df28606b86276d1391a75e200f1e1d28498e.f20.mp4" type="video/mp4">
+      </video>
+    </div>
+<!--     <div id="video_player" style="text-align: center">
+      <video id="example_video_1"
+      width="100%" 
+      height="100%" 
+      preload="auto" 
+      playsinline 
+      controls="controls" 
+      x5-video-player-type="h5" 
+      x5-video-player-fullscreen="true" 
+      x5-video-orientation="landscape">
+        <source src="http://200011375.vod.myqcloud.com/200011375_04e1df28606b86276d1391a75e200f1e1d28498e.f20.mp4" type="video/mp4">
+      </video>
+    </div> -->
+<!--     <video class="video-source"
+     width="100%"
+     controls  
+     style="object-fit:fill"
+     x-webkit-airplay="true"
+     x5-video-player-type="h5"
+     x5-video-orientation="landscape"
+     x5-video-player-fullscreen="true"
+     src = "http://200011375.vod.myqcloud.com/200011375_04e1df28606b86276d1391a75e200f1e1d28498e.f20.mp4"
+     preload="auto">
+    </video> -->
+    <script type="text/javascript">
+
+    // function init_player (url) {
+    //   var video = document.getElementById("example_video_1");
+    //   if (video) {
+    //     // video.src = url + "&amp;width=" + bw + "&amp;height=" + bh + "&amp;tiny=0&amp;auto=0";
+    //     video.src = url;
+    //   }
+    //   set_video_size();
+    // }
+
+    (function () {
+      var supportOrientation=(typeof window.orientation == "number" && typeof window.onorientationchange == "object");
+      var video_player = document.getElementById("video_player");
+      var updateOrientation = function () {
+        console.log('updateOrientation')
+        if (supportOrientation) {
+          updateOrientation = function () {
+            console.log('supportOrientation')
+            var orientation = window.orientation;
+            switch (orientation) {
+              case 90:
+              case -90:
+                orientation = "landscape";
+                break;
+              default:
+                orientation = "portrait";
+            }
+            video_player.setAttribute("class", orientation);
+          }
+          resize_video_player_size();
+          set_video_size();
+        } else {
+          console.log('!supportOrientation')
+          updateOrientation = function () {
+            resize_video_player_size();
+            set_video_size();
+          }
+        }
+        updateOrientation();
+      }
+
+      var init = function () {
+        console.log('init')
+        updateOrientation();
+        if (supportOrientation) {
+          console.log('init_supportOrientation')
+          window.addEventListener("orientationchange", updateOrientation, false);
+        } else {
+          console.log('!init_supportOrientation')
+          updateOrientation();
+        }
+      }
+      window.addEventListener("DOMContentLoaded", init, false);
+    })();
+
+    window.onload = function () {
+      // init_player("https://v.qq.com/iframe/player.html?vid=z03554afocw");
+      // init_player("http://200011375.vod.myqcloud.com/200011375_04e1df28606b86276d1391a75e200f1e1d28498e.f20.mp4");
+      set_video_size()
+    }
+
+    var myPlayer = videojs('example_video_1');
+    videojs("example_video_1").ready(function () {
+      var myPlayer = this;
+      myPlayer.play();
+    })
+
+    function resize_video_player_size () {
+      console.log('resize_video_player_size')
+      var orientation = (window.innerWidth > window.innerHeight) ? "landscape" : "portrait";
+      video_player.setAttribute("class", orientation);
+      video_player.style.width = Math.max(window.innerWidth, window.innerHeight) + 'px';
+      video_player.style.height = Math.min(window.innerWidth, window.innerHeight) + 'px';
+      var delta = Math.abs(window.innerHeight - window.innerWidth)/2;
+      video_player.style.marginTop = (window.innerWidth < window.innerHeight) ? delta + 'px' : '0px';
+      video_player.style.marginLeft = (window.innerWidth < window.innerHeight) ? -delta + 'px' : '0px';
+    }
+
+    function set_video_size () {
+      console.log('set_video_size')
+      var video = document.getElementById("example_video_1");
+      var bw = Math.max(window.innerWidth, window.innerHeight);
+      var bh = Math.min(window.innerWidth, window.innerHeight);
+      if (video) {
+        video.width = bw;
+        video.height = bh;
+      }
+    }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>search_lost</title>
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="./styles/search.css">
+	<script src="./js/jquery-3.1.1.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			font-family: "等线";
+			box-sizing: border-box;
+		}
+		body{
+			background-color: #FAFAFA;
+		}
+		p{
+			width: 100%;
+		}
+		#app{
+			position: fixed;
+			top:0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+		}
+		.my_slide{
+			/*margin-left: -260px;*/
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: -250px;
+			right: 0;
+			overflow: hidden;
+		}
+		.my_sidebar{
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 250px;
+			background-color: rgb(244,247,248);
+		}
+		.main{
+			position: absolute;
+			left: 250px;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			height: 100%;
+			width: 100vw;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+		nav{
+			height: 45px;
+		}
+		.title{
+			font-size: 20px;
+			line-height: 45px;
+			text-indent: 10px;
+			background-color: #fff;
+		}
+
+		.my_sidebar .btn .btn_left{
+			position: absolute;
+			left: 15px;
+			bottom: 20px;
+		}
+		.my_sidebar .btn .btn_right{
+			position: absolute;
+			right: 15px;
+			bottom: 20px;
+		}
+		.my_sidebar li{
+			height: 40px;
+			display: flex;
+			align-items: center;
+		}
+		.my_sidebar li i{
+			padding: 10px;
+			font-size: 1.9rem;
+
+		}
+		.my_sidebar .content{
+			padding: 5px 10px 5px 0;
+			
+		}
+		.main .drawer-toggle i{
+			font-size: 20px;
+			padding: 5px 10px;
+			cursor: pointer;
+		}
+		.main nav{
+		    display: flex;
+		    align-items: center;
+		    justify-content: space-between;
+		    position: fixed;
+		    background-color: #fff;
+		    top: 0;
+		    right: 0;
+		    left: 0;
+		    z-index: 2;
+		    border-bottom: 1px solid #ddd;
+		}
+		.main nav .search {
+			width:200px;
+			padding-right: 10px;
+
+		}
+		.main .main_body{
+			margin-top: 50px;
+		}
+
+		.main .main_body figure{
+			position: relative;
+			padding: 5px;
+			/*align-items: center;
+			margin: 10px 5px;*/
+			border-bottom: 1px dotted #ddd;
+
+		}
+		.main .main_body .abcd{
+			position: relative;
+			left: 30px;
+			top: 20px;
+			margin: 10px;
+		}
+		.main .main_body figure .data{
+			padding: 5px 5px;
+			display: flex;
+			border: 1px solid #eee;
+			border-radius: 5px;
+			margin-bottom: 10px;
+			/*justify-content: space-between;*/
+			-webkit-box-shadow:#dcdcdc 0px 0px 10px;
+			-moz-box-shadow:#dcdcdc 0px 0px 0px 10px;
+			box-shadow: #dcdcdc;
+		}
+		.main .main_body figure .data .img img{
+			border-radius: 5px;
+			width: 100%;
+		}
+
+		.main .main_body figure .data .img {
+			width: 40%;
+			margin-top: 3%;
+			margin-bottom: 3%;
+			border: 1px solid #eee;
+		}
+
+		.main .main_body figure .data .detail{
+			position: absolute;
+			margin-left: 40%;
+			padding: 5px 5px;
+			width: 55%;
+			height: 170px;
+			margin-top: 20px;
+			vertical-align: middle;
+
+		}
+		.main .main_body figure p{
+		    margin:5px 0;
+		}
+
+		.suggest{
+			position:fixed;
+			z-index: 5;
+			right: 57px;
+			top: 39px;
+			width:142px;
+			line-height:30px;
+			background: #fff;
+			border:0px solid #fff;
+			border-bottom: 1px solid #e6e6e6;
+			border-left:1px solid #e6e6e6;
+			border-right: 1px solid #e6e6e6;
+
+		}
+		.suggest li{
+			padding-left: 10px;
+			border-top: 1px dashed #e6e6e6;
+			/*border-left: 1px solid #FFF2B4;
+			border-right: 1px solid #FFF2B4;*/
+		}
+		#imgsearchicon{
+			padding: 5px;
+			/*border-style:none; */
+			width:60px; 
+			height:60px; 
+			
+
+			/*background-repeat:no-repeat;*/
+		}
+		.imgshow{
+			position:fixed;
+			z-index: 5;
+			right: 10px;
+			top: 37px;
+			width:47.48px;
+			line-height:30px;
+			background: #fff;
+			border:0px solid #eee;
+		    /*-webkit-box-shadow:#666 0px 0px 0px 20px;
+		    -moz-box-shadow:#666 0px 0px 0px 20px;
+		    box-shadow: #666;
+			/*
+			border-bottom: 1px solid #e6e6e6;
+			border-left:1px solid #e6e6e6;
+			border-right: 1px solid #e6e6e6;*/
+		}
+		.img-rounded{
+			border: 1px solid #bfccdb;
+			padding: 5px;
+			width: 100%;
+		}
+		#imgsearchicon{
+			background:url(images/12.png); 
+			padding: 5px;
+			/*border-style:none; */
+			width:47.48px; 
+			height:34px; 
+		}
+		.state0{
+			position: absolute;
+			margin-left: 85%;
+			background: url(images/state0.png);
+			width: 40px;
+			height: 40px;
+			z-index: 1;
+			/*display: none;*/
+		}
+		.state1{
+			position: absolute;
+			margin-left: 85%;
+			background: url(images/state1.png);
+			width: 40px;
+			height: 40px;
+			z-index: 1;
+			/*display: none;*/
+		}
+	</style>
+</head>
+<body>
+<!-- <form action="searchlost.php" method="post" enctype="multipart/form-data"> -->
+	<div id="app">
+	    <div class="my_slide">
+			<div class="my_sidebar">
+				<nav class="title">小柚子招领</nav>
+				<div class="content">
+					<ul>
+						<li>
+						    <i class="glyphicon glyphicon-time"></i>
+						    <select name="time" id="" class="form-control">
+						    	<option value="" style="color: #aaa" disabled selected>时间</option>
+						    	<option value="">全部时间</option>
+								<option value="threedays">近3天</option>
+								<option value="aweek">近一周</option>
+								<option value="amonth">近一月</option>
+								<option value="halfyear">近半年</option>
+						    </select>
+						</li>
+						<li>
+						    <i class="glyphicon glyphicon-tree-deciduous"></i>
+						    <select name="place" id="" class="form-control">
+								<option value="" style="color: #aaa" disabled selected>地点</option>
+						    	<option value="">全部地点</option>
+								<option value="教一">教一</option>
+								<option value="教二">教二</option>
+								<option value="教三">教三</option>
+								<option value="教四">教四</option>
+								<option value="教五">教五</option>
+								<option value="图书馆">图书馆</option>
+								<option value="南操">南操</option>
+								<option value="北操">北操</option>
+								<option value="大活">大活</option>
+								<option value="其他">其他</option>
+								<option value="未知">我不知道</option>
+						    </select>
+						</li>
+						<li>
+						    <i class="glyphicon glyphicon-heart"></i>
+						    <select name="name" id="" class="form-control">
+						    	<option value="" style="color: #aaa" disabled selected>种类</option>
+						    	<option value="">全部种类</option>
+								<option value="饭卡">饭卡</option>
+								<option value="钱包">钱包</option>
+								<option value="杯子">杯子</option>
+								<option value="U盘">U盘</option>
+								<option value="书本">书本</option>
+								<option value="文具">文具</option>
+								<option value="手机">手机</option>
+								<option value="钥匙">钥匙</option>
+								<option value="其他">其他</option>
+						    </select>
+						</li>
+					</ul>
+					<div class="btn">
+						<div class="btn_left">
+							<button type="button" class="btn btn-default navbar-btn" onclick="changeleft()">退出</button>
+						</div>
+						<div class="btn_right">
+							<button type="button" class="btn btn-info navbar-btn" onclick="selectData()">筛选</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="main">
+				<nav>
+					<div class="drawer-toggle" onclick="changeleft()">
+					    <i class="glyphicon glyphicon-align-justify"></i>
+					</div>
+					<div class="search">
+						<div class="input-group">
+							<input type="text" name="text" onkeyup="showHint(this.value)" id="searchtext" class="form-control">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" onclick="textSerach(document.getElementById('searchtext').value)">Go!</button>
+								<button class="btn btn-default" type="button" id="imgsearchicon"><span class="glyphicon glyphicon-camera" style="font-size: 22px;color:#585555 "></span></button>
+							</span>
+						</div>
+					</div>
+				</nav>
+			<div class="main_body">
+
+				<div class="suggest" id="search_suggest">
+				</div>
+				<div class="imgshow" id="imgshow">
+				</div>
+
+				<figure class="datas" id="datas">
+				</figure>
+
+			</div>
+		</div>
+	</div>
+<!-- </form> -->
+</body>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+
+(function (){
+	firstData();
+	Config();
+}())
+
+//微信接口验证
+function Config(){
+	var formData = new FormData();
+	formData.append("type","config");
+	formData.append("url",location.href.split('#')[0]);
+
+	var request = new XMLHttpRequest();
+	request.open("POST","weixin/jssdk.php");
+	request.responseType = "json";
+	request.onload = function()
+	{
+		if(request.readyState == 4 && request.status == 200)
+		{
+			wx.config({
+				debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId: this.response.appId, // 必填，公众号的唯一标识
+				timestamp: this.response.timestamp, // 必填，生成签名的时间戳
+				nonceStr: this.response.noncestr, // 必填，生成签名的随机串
+				signature: this.response.signature,// 必填，签名，见附录1
+				jsApiList: ['checkJsApi','chooseImage','previewImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			});
+		}
+	}
+	request.send(formData);
+}
+
+//上传图片
+wx.ready(function(){
+
+	var lId;
+	var sId;
+	document.querySelector('#imgsearchicon').onclick = function(){
+		//判断当前版本是否支持指定的js接口
+		wx.checkJsApi({
+			jsApiList:['chooseImage','previewImage','uploadImage'],
+			// success:function(res){
+			// }
+			fail:function(){
+				alert("本设备不支持图片搜索");
+			}
+		});
+		wx.chooseImage({
+			count: 1, // 默认9
+			sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+			success:function(res){
+				lId = res.localIds;
+
+				//图片预览
+				var div = document.getElementById("imgshow");
+				//console.log(div);
+				//if(div.hasChildNodes())
+				while (div.hasChildNodes()) { 
+					//当div下还存在子节点时 循环继续  
+					div.removeChild(div.firstChild);   
+				}
+				var ele = document.createElement("img");
+				ele.setAttribute("class","img-rounded");
+				ele.src = lId.toString();
+				var element = document.getElementById("imgshow");
+				element.appendChild(ele);
+			}
+		});
+	};
+	document.querySelector('#imgshow').onclick = function(){
+		if(lId){
+			//图片上传
+			wx.uploadImage({
+				localId: lId.toString(),
+				success: function (res) {
+					sId = res.serverId.toString();
+					var formData = new FormData();
+					formData.append("id",sId);
+					formData.append("isLose","1");
+					// alert("图片已上传至微信服务器, serverId is :" + sId);
+					getData("imgsearch.php",formData);
+					removeAllChild("imgshow");
+				},
+				fail: function (res) {
+					alert("图片未上传成功".JSON.stringify(res));
+				}
+			});
+		}
+	};
+});
+
+//从后端获取数据
+function getData(posturl,formData){
+	var request = new XMLHttpRequest();
+	request.open("POST", posturl);
+	request.responseType = 'json';
+	request.onload = function()
+	{
+		console.log(posturl);
+		console.log(this.response);
+		if (request.readyState==4 && request.status==200)
+		{
+			removeAllChild("datas");
+			// console.log(this.response);
+			showData(this.response);
+		}
+	}
+	request.send(formData);
+}
+
+//页面你初始时与分类筛选时数据更新
+function firstData(){
+	var obj = { 
+		time:document.getElementsByName("time")[0].value,
+		place:document.getElementsByName("place")[0].value,
+		name:document.getElementsByName("name")[0].value
+	};
+
+	var formData = new FormData();
+	formData.append("name", obj.name);
+	formData.append("time", obj.time);
+	formData.append("place", obj.place);
+	formData.append("isLose","1");
+    getData("searchlost.php", formData);
+}
+
+var a;
+//搜索框提示文字
+function showHint(str){
+	var request = new XMLHttpRequest();
+	request.open("GET", "wenzi.php?isLose=1&text="+str, true);
+	request.responseType = 'json';
+	request.onload = function(){
+		if(request.readyState == 4 && request.status == 200){
+			console.log(this.response);
+			removeAllChild("search_suggest");
+			if(this.response){
+				a = this.response;
+				for(var i = 0; i < this.response.length; i++){
+					var ele = document.createElement("li");
+					var node = document.createTextNode(this.response[i].toString());
+					ele.appendChild(node);
+					ele.setAttribute("onclick","text("+i+")");
+					var element = document.getElementById("search_suggest");
+					element.appendChild(ele);
+				}
+			}
+		}
+	}
+	request.send();
+}
+
+function text(i){
+	textSerach(a[i].toString());
+	document.getElementById('searchtext').value = a[i].toString();
+}
+
+//文本框搜索
+function textSerach(text){
+	if(text !== ""){
+		var formData = new FormData();
+		formData.append("text", text);
+		formData.append("isLose", "1");
+		getData("wenzisearch.php",formData);
+		removeAllChild("search_suggest");
+	}
+}
+
+//回车事件
+document.onkeydown = function(key){
+	if(!key){
+		key = window.event;
+	}
+	if((key.keyCode || key.which) == 13){
+		textSerach(document.getElementById('searchtext').value);
+	}
+}
+
+//在主页面显示物品信息
+function showData(data){
+	if(data != null){
+		for(var i=0; i<data.length; i++){
+
+			var tmp = data[i].id;
+			var gid = tmp.toString();
+
+			var a_div = document.createElement("div");
+			a_div.setAttribute("id","data"+gid);
+			a_div.setAttribute("class","data");
+			a_div.setAttribute("onclick","jump("+gid+")");
+			document.getElementById("datas").appendChild(a_div);
+
+			var img_div = document.createElement("div");
+			img_div.setAttribute("id","img"+gid);
+			img_div.setAttribute("class","img");
+			document.getElementById("data"+gid).appendChild(img_div);
+
+			var detail_div = document.createElement("div");
+			detail_div.setAttribute("id","detail"+gid);
+			detail_div.setAttribute("class","detail");
+			document.getElementById("data"+gid).appendChild(detail_div);
+
+			if(data[i].isBack.toString() === "1"){//已认领
+				var imgclass = "state1";
+			}else{//未认领
+				var imgclass = "state0";
+			}
+
+			var img_state0 = document.createElement("div")
+			// var img_state0 = document.createElement("img");
+			img_state0.setAttribute("class",imgclass);
+			document.getElementById("data"+gid).appendChild(img_state0);
+
+
+			//显示图片
+			var ele = document.createElement("img");
+			var pa = data[i].image;
+			var pat = "thumpimg.php?path=" + pa.toString();
+			ele.src = pat;
+			var element = document.getElementById("img"+gid);
+			element.appendChild(ele);
+
+			//显示文字
+			//var fixed = document.getElementById("data[i]")
+			addPtags(data[i].name,"物品：", gid);
+			if(data[i].name.toString() === "饭卡"){
+				var flex = document.getElementById("detail");
+				flex.style.marginTop = "0px";
+				if(data[i].cname){
+					addPtags(data[i].cname,"姓名：", gid);
+				}
+				if(data[i].cno){
+					addPtags(data[i].cno,"卡号：", gid);
+				}
+				
+			}
+			addPtags(data[i].date,"时间：",gid);
+			addPtags(data[i].place,"地点：",gid);
+			addPtags(data[i].contact,"联系：",gid);
+		}
+	}
+	else{
+		var ele = document.createElement("p");
+		var node = document.createTextNode("对不起，没找到您要的物品信息");
+		ele.appendChild(node);
+		var element = document.getElementById("datas");
+		element.appendChild(ele);
+	}
+}
+
+//添加p标签
+function addPtags(text,detail,gid){
+	var ele = document.createElement("p");
+	var str = detail + text.toString();
+	// var length = str.replace(/[^\x00-\xff]/g,"aa").length;
+	// if length > 10;
+	var node = document.createTextNode(str);
+	ele.appendChild(node);
+	var element = document.getElementById("detail" + gid);
+	element.appendChild(ele);
+}
+
+//移除参数id下的所有子节点
+function removeAllChild(id){
+	var div = document.getElementById(id);
+	//console.log(div);
+	//if(div.hasChildNodes())
+	while (div.hasChildNodes()) { 
+		//当div下还存在子节点时 循环继续  
+		div.removeChild(div.firstChild);   
+	}
+}
+
+//筛选框获取数据
+function selectData(){
+	firstData();
+	changeleft();
+}
+
+//筛选框改变
+function changeleft(){
+	var my_slide=$('.my_slide');
+	if(my_slide.css('left')=='-250px'){
+		my_slide.animate({
+			left:'0px'
+		})
+	}else{
+		my_slide.animate({
+			left:'-250px'
+		})
+	}
+}
+
+//页面跳转
+function jump(gid){
+	window.location.href = "showdetails.html?id="+gid;
+}
+
+// window.onload=function(){
+// 	$('.drawer-toggle').click(function(e){
+// 		var my_slide=$('.my_slide');
+// 		if(my_slide.css('left')=='-250px'){
+//             my_slide.animate({
+//             	left:'0px'
+//             })
+// 		}else{
+// 			my_slide.animate({
+//             	left:'-250px'
+//             })
+// 		}
+// 	})
+// 	$('.main_body').resize(function(e){
+// 		console.log(document.body.clientWitdh)
+// 	})
+
+// }
+</script>
+</html>

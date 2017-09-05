@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PersonalCenter</title>
+	<meta charset="UTF-8">
+	<script src="./js/jquery-3.1.1.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style type="text/css">
+
+    	.headshows{
+            background: url("images/5.jpg");
+  			height: 150px;
+  		    position: relative;
+  		    margin: -10px;
+  			margin-bottom: 20px;
+		}
+		.headshows h1{
+  			display: block;
+ 			position: absolute;
+  			margin-top: 50px;
+  			width: 100%;
+  			line-height:50px; 
+  			text-align:center; 
+  			font-size:20px; 
+  			color:#fff; 
+  			background:rgba(255,211,6,0.3);
+  			background-attachment: scroll; 
+		}
+		.lost,.find {
+			 background-color: #fff;
+             margin-bottom: 10px;
+		 }
+		.lost_title,.find_title { 
+            width: 100%;
+			text-align: center;
+		}
+		h2 {color:#87CEEB;}
+
+        /*.find { 
+            margin-top: 10px;
+            background-color: #fff; 
+        }
+		.find_title { 
+            width: 100%;
+			text-align: center;
+		}
+		.find_title h3 {color:#87CEEB;}*/
+		figure{
+			margin: 16px;
+			margin-left: 25px;
+			margin-right: 25px; 
+		}
+		figure img{
+			 width: 95%;
+			 border-radius: 8px;
+			 padding: 5px;
+			 border: 1px solid #eee;
+		}
+		figure p{ margin:8px 0; }
+		hr{
+			height:10px;
+			border:none;
+			border-top:9px groove #d5ebf7;
+		}
+		.big{
+			padding: 5px;
+			border: 1px solid #eee;
+			background: rgb(251,252,255);
+			border-radius: 8px;
+			margin-bottom: 15px;
+			-webkit-box-shadow:#dcdcdc 0px 0px 15px;
+	    	-moz-box-shadow:#dcdcdc 0px 0px 0px 15px;
+	    	box-shadow: #dcdcdc;
+		}
+		.detail{
+			margin-left: 10%;
+			width: 80%;
+		}
+		.data{
+			margin-bottom: 10px;
+			margin-top: 10px;
+		}
+		.button{
+			width: 100%;
+			height: 50px;
+		}
+		.deleteit{
+			color: #fff;
+			border: 0;
+			background-color: #c1e0ec;
+            margin-right:8%;
+			border-radius: 5px;
+			width: 40%;
+			height: 30px;
+			float: right;
+		}
+        .revise{
+        	color: #fff;
+        	border: 0;
+        	border-radius: 5px;
+			margin-left:8%;
+			background-color: #c1e0ec;
+			width: 40%;
+			height: 30px;
+			float: left;
+        }
+        button:hover{
+        	background-color: #4bcc60;
+        }
+    </style>
+</head>
+<body>
+    <div class="headshows">
+    	<h1>Personal Center</h1>
+    </div>
+    <div class="lost-find">
+        <div class="lost">
+           <div class="lost_title">
+           	   <h2>lost</h2>
+           </div>
+           <div class="lostshow">
+                <figure class="lostshow_datas" id="lostshow_datas">
+				</figure>
+           	</div>
+        </div>
+        <br />
+        <hr/>
+    	<div class="find">
+    	    <div class="find_title">
+           	   <h2>find</h2>
+            </div>
+            <div class="findshow">
+                <figure class="findshow_datas" id="findshow_datas">
+                    <!--<div class="find-img-box" id="find-img-box" >
+        	            <img src="5.jpg" style="width: 200px;height: 150px;">
+		            </div>
+		            <div class="find-words-box" id="find-words-box">
+			            <div class="find-details" id="find-details">
+							<p>物品：杯子</p>
+							<p>姓名：奥特曼</p>
+							<p>卡号：01234567899876543210</p>
+							<p>时间：2017.05.05</p>
+							<p>地点：火星</p>
+							<p>联系：喂？妖妖灵么！</p>
+			            </div>
+					</div> -->
+					<!--<span>
+    					<button class="find_revise" type="button" style="display: none">修改</button>
+    					<button class="find_deleteit" type="button" style="display: none">删除</button>
+    				</span>-->     
+				</figure>
+           	</div>   	
+    	</div>
+    </div>
+</body>
+<script>
+
+(function (){
+	getData();
+}())
+
+function getData(){
+	httpRequest("?isLose=1");
+	httpRequest("?isLose=0");
+}
+
+function httpRequest(str){
+	var request = new XMLHttpRequest();
+	request.open("GET", "Personal_Center.php" + str, true);
+	request.responseType = 'json';
+	request.onload=function()
+	{
+		if (request.readyState==4 && request.status==200)
+		{
+			// console.log(this.response);
+			switch(str){
+				case "?isLose=1": 
+					removeAllChild("lostshow_datas");
+					showData(this.response,"lostshow_datas");
+					break;
+				case "?isLose=0": 
+					removeAllChild("findshow_datas");
+					showData(this.response,"findshow_datas");
+					break;
+			}
+		}
+	}
+	request.send();
+}
+
+
+//lostdata
+function showData(lostdata,show_datas){
+	if(lostdata != null){
+		for(var i=0; i<lostdata.length; i++){
+
+			var tmp = lostdata[i].id;
+			var gid = tmp.toString();
+
+			var big_div = document.createElement("div");
+			big_div.setAttribute("id","big_"+gid);
+			big_div.setAttribute("class","big");
+			document.getElementById(show_datas).appendChild(big_div);
+
+            //data div
+			var a_div = document.createElement("div");
+			a_div.setAttribute("id","data_"+gid);
+			a_div.setAttribute("class","data");
+			a_div.setAttribute("onclick","jump("+gid+")");
+			document.getElementById("big_"+gid).appendChild(a_div);
+
+			//img div
+			var img_div = document.createElement("div");
+			img_div.setAttribute("id","img_"+gid);
+			img_div.setAttribute("class","img");
+			img_div.setAttribute("onclick","jump("+gid+")");
+			document.getElementById("data_"+gid).appendChild(img_div);
+
+			//detail div
+			var detail_div = document.createElement("div");
+			detail_div.setAttribute("id","detail_"+gid);
+			detail_div.setAttribute("class","detail");
+			document.getElementById("data_"+gid).appendChild(detail_div);
+
+			//button div
+			var b_div = document.createElement("div");
+			b_div.setAttribute("id","button_"+gid);
+			b_div.setAttribute("class","button");
+			document.getElementById("big_"+gid).appendChild(b_div);
+
+			//状态按钮
+			// ------根据状态变换图标------- //
+			switch(lostdata[i].isback.toString()){
+				case '0'://未认领
+					break;
+				case '1'://已认领
+					break;
+			}
+
+           	//修改按钮
+			var revise_button = document.createElement("button");
+			revise_button.innerHTML = "修改";
+        	revise_button.setAttribute("id","revise_"+gid);
+        	revise_button.setAttribute("class","revise");
+        	revise_button.setAttribute("onclick","revise_detail("+gid+")");
+        	document.getElementById("button_"+gid).appendChild(revise_button);
+
+        	//删除按钮
+	    	var deleteit_button = document.createElement("button");
+			deleteit_button.innerHTML = "删除";
+        	deleteit_button.setAttribute("id","deleteit_"+gid);
+        	deleteit_button.setAttribute("class","deleteit");
+        	deleteit_button.setAttribute("onclick","delete_detail("+gid+")");
+        	document.getElementById("button_"+gid).appendChild(deleteit_button);
+
+			//显示图片
+			var ele = document.createElement("img");
+			ele.setAttribute("class","img-rounded");
+			var pa = lostdata[i].image;
+			var pat = "thumpimg.php?path=" + pa.toString();
+			ele.src = pat;
+			var element = document.getElementById("img_"+gid);
+			element.appendChild(ele);
+
+			//显示文字
+			addPtags(lostdata[i].name,"物品：", gid);
+			if(lostdata[i].name.toString() === "饭卡"){
+				if(lostdata[i].cname){
+					addPtags(lostdata[i].cname,"姓名：", gid);
+				}
+				if(lostdata[i].cno){
+					addPtags(lostdata[i].cno,"卡号：", gid);
+				}
+			}
+			addPtags(lostdata[i].date,"时间：",gid);
+			addPtags(lostdata[i].place,"地点：",gid);
+			addPtags(lostdata[i].contact,"联系：",gid);
+		}
+	}
+}
+
+function addPtags(text,detail,gid){
+	var ele = document.createElement("p");
+	var node = document.createTextNode(detail + text.toString());
+	ele.appendChild(node);
+	element = document.getElementById("detail_" + gid);
+	element.appendChild(ele);
+}
+
+function removeAllChild(id){
+	var div = document.getElementById(id);
+	//console.log(div);
+	//if(div.hasChildNodes())
+	while (div.hasChildNodes()) { 
+		//当div下还存在子节点时 循环继续  
+		div.removeChild(div.firstChild);
+	}
+}
+
+//页面跳转
+function jump(gid){
+	window.location.href = "showdetails.html?id="+gid;
+}
+
+function revise_detail(gid){
+	window.location.href = "Commodity_Information.html?id="+gid;
+}
+
+function delete_detail(gid){
+	var sure = confirm("确认删除物品信息？");
+	if(sure == true){
+		var request = new XMLHttpRequest();
+		request.open("GET", "delete.php?id="+gid, true);
+		request.responseType = 'json';
+		request.onload=function()
+		{
+			if (request.readyState==4 && request.status==200)
+			{
+				// console.log(this.response);
+				if(this.response){
+					alert(this.response.alert);
+					if(this.response.isLose.toString() === "1")
+						var parent = document.getElementById("lostshow_datas");
+					else
+						var parent = document.getElementById("findshow_datas");
+					var child = document.getElementById("big_"+gid);
+					parent.removeChild(child);
+				}
+				else{
+					elert("未收到后端响应");
+				}
+			}
+		}
+		request.send();
+	}
+}
+</script>
+</html>

@@ -1,0 +1,124 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-family: "等线";
+	box-sizing: border-box;
+}
+p{
+	width: 100%;
+}
+#app{
+	position: fixed;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.my_slide{
+	/*margin-left: -260px;*/
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: -250px;
+	right: 0;
+	overflow: hidden;
+}
+.my_sidebar{
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 250px;
+	background-color: rgb(244,247,248);
+}
+.main{
+	position: absolute;
+	left: 250px;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	height: 100%;
+	width: 100vw;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+nav{
+	height: 45px;
+}
+.title{
+	font-size: 20px;
+	line-height: 45px;
+	text-indent: 10px;
+	background-color: #fff;
+}
+
+.my_sidebar .btn .btn_left{
+	position: absolute;
+	left: 15px;
+	bottom: 20px;
+}
+.my_sidebar .btn .btn_right{
+	position: absolute;
+	right: 15px;
+	bottom: 20px;
+}
+.my_sidebar li{
+	height: 40px;
+	display: flex;
+	align-items: center;
+}
+.my_sidebar li i{
+	padding: 10px;
+	font-size: 1.9rem;
+
+}
+.my_sidebar .content{
+	padding: 5px 10px 5px 0;
+	
+}
+.main .drawer-toggle i{
+	font-size: 20px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+.main nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    background-color: #fff;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    border-bottom: 1px solid #ddd;
+}
+.main nav .search {
+	width:200px;
+	padding-right: 10px;
+
+}
+.main .main_body{
+	margin-top: 50px;
+}
+.main .main_body figure{
+	position: relative;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	margin: 10px 5px;
+	border-bottom: 1px dotted #ddd;
+}
+.main .main_body figure img{
+	width: 100%;
+}
+.main .main_body figure .img{
+	width: 50%;
+}
+.main .main_body figure .details{
+	padding: 5px 10px;
+}
+.main .main_body figure p{
+    margin:8px 0;
+}

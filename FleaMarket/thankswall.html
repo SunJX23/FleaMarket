@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>thankswall</title>
+	<meta charset="utf-8">
+	<!-- <link rel="stylesheet" href="./js/jquery-3.1.1.min.js">
+	<link rel="stylesheet" href="./js/bootstrap.min.js"> -->
+	<link rel="stylesheet" type="text/css" href="./styles/thankswall.css">
+	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body,input{
+			font-size: 14px;
+			line-height: 24px;
+			color: #333;
+			font-family:Microsoft yahei, Song, Arial, Helvetica, Tahoma, Geneva;
+		}
+		.head{
+			background: url('../images/4.jpg');
+			height: 200px;
+			position: relative;
+			margin-bottom: 10px;
+		}
+		.head h1{
+			display: block;
+			position: absolute;
+			margin-top: 65px;
+			width: 100%;
+			line-height:60px; 
+			text-align:center; 
+			font-size:20px; 
+			color:#fff; 
+			background:rgba(255,211,6,0.3);
+			background-attachment: scroll; 
+		}
+		#content #post,#comment p{
+			zoom:1;
+		}
+		h4{
+			color: #eee;
+			text-align: center;
+		}
+		#content #post:after,#comment p:after{
+			display:block; 
+			height:0; 
+			clear:both; 
+			visibility:hidden; 
+			overflow:hidden; 
+			content:'.';
+		}
+		.transition{
+			-webkit-transition:all 0.5s linear;
+			-moz-transition:all 0.5s linear; 
+			-o-transition:all 0.5s linear; 
+			-ms-transition:all 0.5s linear; 
+			transition:all 0.5s linear;
+		}
+		#content{
+			margin:0 auto; 
+			width: 90%;
+			overflow:hidden;
+		}
+		#content #post{
+			margin-bottom:15px; 
+			padding-bottom:15px; 
+			border-bottom:1px #d4d4d4 dashed;
+		}
+		#content #post h4{
+			color: #9bb7d6;
+			text-align: center;
+		}
+		#content #post textarea{
+			display:block; 
+			margin-bottom:10px; 
+                        padding: 10px;
+			width:93%; 
+			height:90px;  
+			border-radius:5px; 
+			resize:none; 
+			outline:none;
+			border:1px #ecefc3 solid; 
+			background:##fdfdfd;
+		}
+		#content #post textarea:hover{
+			border:1px #843303 solid; 
+			background:#fff;
+		}
+		#content #post #postBt{
+			border:none;
+			font-size: 14px;
+			width: 70px;
+			padding:6px; 
+			float:right;
+			color: #FFF;
+			background-color:rgb(247, 200, 126);
+			border-radius: 7px;
+		}
+		#comment{
+			overflow:hidden;
+		}
+		#comment p{
+			margin-bottom:10px; 
+			padding:10px; 
+			border-radius:5px;
+		}
+		#comment p:nth-child(5n+0){
+			border:1px solid #f5eee0;
+			background:#f8f3fb;
+		}
+		#comment p:nth-child(5n+1){
+			border:1px solid #ececd3;
+			background:#e9f9fb;
+		}
+		#comment p:nth-child(5n+2){
+			border:1px solid #f5eee0;
+			background:#f0fbeb;
+		}
+		#comment p:nth-child(5n+3){
+			border:1px solid #f5eee0;
+			background:rgb(251,246,246);
+		}
+		#comment p:nth-child(5n+4){
+			border:1px solid #f5eee0;
+			background:rgb(253,252,226);
+		}
+		#comment p span{
+			display:inline; 
+			color: :#999;
+			float:left;
+		}
+		#comment p .nick{
+			color: #999;
+			text-align: center;
+		}
+		#comment p .content{
+			color: #999;
+			width:738px;
+		}
+		#comment p .date{
+			width:200px; 
+			color:#999; 
+			text-align:right;
+		}
+		#comment p .delete{
+                        border: 0px;
+			border-style: none;
+			background: transparent;
+			color: #999;
+			padding: 3px;
+			float: right;
+		}
+		#comment p .delete:hover{
+			text-decoration: underline;
+			border-style: none;
+                        border: 0px;
+		}
+	</style>
+</head>
+<body>
+	<div class="head">
+		<h1>Thanks Wall</h1>
+	</div>
+	<div id="content">
+		<div id="post">
+			<div id="mynick"></div>
+			<textarea class="transition" name="text"></textarea>
+			<input type="button" id="postBt" class="btn btn-primary" value="发表" onclick="upData()">
+		</div>
+		<div id="comment">
+		</div>
+	</div>
+</body>
+<script>
+
+(function (){
+	getData();
+}())
+
+//获取留言
+function getData(){
+	var formData = new FormData();
+	formData.append("type","show");
+	requestData(formData,"show");
+}
+
+//上传留言
+function upData(){
+	var formData = new FormData();
+	formData.append("content", document.getElementsByName('text')[0].value);
+	formData.append("type","update");
+	requestData(formData,"update");
+	document.getElementsByName('text')[0].value = "";
+}
+
+//向后端请求数据
+function requestData(formData,type){
+	var request = new XMLHttpRequest();
+	request.open("POST","thankswall.php");
+	request.responseType = 'json';
+	request.onload = function(){
+		if(request.readyState == 4 && request.status==200 && this.response){
+			console.log(this.response);
+			showData(this.response,type);
+		}
+	}
+	request.send(formData);
+}
+
+function addTags(tag,text,tID,classid){
+	var ele = document.createElement(tag);
+	var node = document.createTextNode(text);
+	ele.appendChild(node);
+	ele.setAttribute("class",classid);
+	var element = document.getElementById("comment"+tID);
+	element.appendChild(ele);
+}
+
+function showData(data,type){
+	//插入留言展示顶部元素
+	var first = document.createElement("h1");
+	first.setAttribute("class","first");
+	document.getElementById("comment").appendChild(first);
+	//插入昵称
+	if(!document.getElementById("mynick").hasChildNodes()){
+		var mynick = document.createElement("h4");
+		var node = document.createTextNode(data[0].nick.toString());
+		mynick.appendChild(node);
+		mynick.setAttribute("class","mynick");
+		document.getElementById("mynick").appendChild(mynick);
+	}
+	var last = (type === "update") ? 0 : 1;
+	//显示留言数据
+	if(data != null){
+		for(var i = data.length-1; i >= last; i--)
+		{   
+			var tID = data[i].id.toString();
+			var a_comment = document.createElement("p");
+			a_comment.setAttribute("id","comment"+tID);
+			a_comment.setAttribute("class","comment");
+			switch(type){
+				case "update":
+					//更新留言顶部元素
+					var first = document.getElementsByClassName("first")[0];
+					document.getElementById("comment").insertBefore(a_comment,first);
+					var newfirst = document.createElement("h1");
+					newfirst.setAttribute("class","first");
+					document.getElementById("comment").insertBefore(newfirst,a_comment);
+					break;
+				case "show":
+					document.getElementById("comment").appendChild(a_comment);
+					break;
+			}
+			//显示昵称
+			addTags("h4",data[i].nick.toString(),tID,"nick");
+			//显示内容
+			addTags("span",data[i].content.toString(),tID,"content");
+			//显示时间
+			addTags("span",data[i].date.toString(),tID,"date");
+			//删除按钮
+			if(data[i].isdelete.toString() === "true"){
+				var deleteit_button = document.createElement("button");
+				deleteit_button.innerHTML = "删除";
+	        	deleteit_button.setAttribute("class","delete");
+	        	deleteit_button.setAttribute("onclick","deletecomment("+tID+")");
+	        	document.getElementById("comment"+tID).appendChild(deleteit_button);
+			}
+			else{
+			}
+		}
+	}
+}
+
+function deletecomment(tID){
+	var sure = confirm("确认删除留言？");
+	if(sure == true){
+		var request = new XMLHttpRequest();
+		var formData = new FormData();
+		formData.append("type","delete");
+		formData.append("tID",tID);
+		request.open("POST", "thankswall.php");
+		request.responseType = 'json';
+		request.onload=function()
+		{
+			if (request.readyState==4 && request.status==200)
+			{
+				if(this.response){
+					alert(this.response);
+					if(this.response === "删除成功"){
+						var child = document.getElementById("comment"+tID);
+						document.getElementById("comment").removeChild(child);
+					}
+				}
+				else{
+					alert("未收到后端响应");
+				}
+			}
+		}
+		request.send(formData);
+	}
+}
+
+function addTags(tag,text,tID,classid){
+	var ele = document.createElement(tag);
+	var node = document.createTextNode(text);
+	ele.appendChild(node);
+	ele.setAttribute("class",classid);
+	var element = document.getElementById("comment"+tID);
+	element.appendChild(ele);
+}
+
+</script>
+</html>

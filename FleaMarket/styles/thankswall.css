@@ -1,0 +1,128 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+body,input{
+  font-size: 14px;
+  line-height: 24px;
+  color: #333;
+  font-family:Microsoft yahei, Song, Arial, Helvetica, Tahoma, Geneva;
+}
+.head{
+  background: url('../images/4.jpg');
+  height: 200px;
+  position: relative;
+  margin-bottom: 10px;
+}
+.head h1{
+  display: block;
+  position: absolute;
+  margin-top: 65px;
+  width: 100%;
+  line-height:70px; 
+  text-align:center; 
+  font-size:24px; 
+  color:#fff; 
+  background:rgba(255,211,6,0.3);
+  background-attachment: scroll; 
+}
+#content #post,#comment p{
+  zoom:1;
+}
+h4{
+  color: #eee;
+  text-align: center;
+}
+#content #post:after,#comment p:after{
+  display:block; 
+  height:0; 
+  clear:both; 
+  visibility:hidden; 
+  overflow:hidden; 
+  content:'.';
+}
+.transition{
+  -webkit-transition:all 0.5s linear;
+  -moz-transition:all 0.5s linear; 
+  -o-transition:all 0.5s linear; 
+  -ms-transition:all 0.5s linear; 
+  transition:all 0.5s linear;
+}
+#content{
+  margin:0 auto; 
+  width: 90%;
+  overflow:hidden;
+}
+#content #post{
+  margin-bottom:15px; 
+  padding-bottom:15px; 
+  border-bottom:1px #d4d4d4 dashed;
+}
+#content #post h6{
+   color: #9bb7d6;
+   text-align: center;
+}
+#content #post textarea{
+  display:block; 
+  margin-bottom:10px; 
+  width:99%; 
+  height:60px; 
+  border:1px #843303 solid; 
+  border-radius:5px; 
+  resize:none; 
+  outline:none;
+}
+#content #post textarea:hover{
+  border:1px #ecefc3 solid; 
+  background:#f5f5f5;
+}
+#content #post #postBt{
+  border:none;
+  font-size: 14px;
+  padding:10px; 
+  float:right;
+  color: #FFF;
+  background-color:rgb(251, 180, 68);
+  border-radius: 7px;
+}
+#comment{
+  overflow:hidden;
+}
+#comment p{
+  margin-bottom:10px; 
+  padding:10px; 
+  border-radius:5px;
+}
+#comment p:nth-child(5n+0){
+  border:1px solid #f7cba5;
+  background:#fef5ff;
+}
+#comment p:nth-child(5n+1){
+  border:1px solid #e0de9d;
+  background:#bee4e8;
+}
+#comment p:nth-child(5n+2){
+  border:1px solid #bee4e8;
+  background:#f0fbeb;
+}
+#comment p:nth-child(5n+3){
+  border:1px solid #b9a7b9;
+  background:rgb(232,232,232);
+}
+#comment p:nth-child(5n+4){
+  border:1px solid #ddc2eb;
+  background:rgb(245,243,195);
+}
+#comment p:nth-child()
+#comment p span{
+  display:inline; 
+  float:left;
+}
+#comment p .msg{
+  width:738px;
+}
+#comment p .datetime{
+  width:200px; 
+  color:#999; 
+  text-align:right;
+}

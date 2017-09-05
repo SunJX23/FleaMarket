@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>search</title>
+	<style type="text/css">
+		.suggest{
+			background-color: #fff;
+			width: 350px;
+			border:1px solid #999;
+		}
+		.suggest ul{
+			list-style: none;
+			margin: 0;
+			padding:0; 
+		}
+		.suggest ul li{
+			padding: 3px;
+			font-size: 14px;
+			line-height: 25px;
+			cursor: pointer;
+		}
+		.suggest ul li:hover{
+			background-color: red;
+
+		}
+	</style>
+	<script>
+	function showHint(str)
+	{	
+		var request = new XMLHttpRequest();
+		request.open("GET","wenzi.php?text="+str,true);
+		request.responseType = 'json';
+		request.send();
+		request.onreadystatechange=function()
+		{
+			if (request.readyState==4 && request.status==200)
+			{
+				removeAllChild("shows");
+				createDT(this.response,"li","shows");
+			}
+		}
+	}
+
+	function createDT(text,table,id){
+		for(var i=0; i<text.length; i++){
+			var ele = document.createElement(table);
+			var node = document.createTextNode(text[i]);
+			ele.appendChild(node);
+			var element = document.getElementById(id);
+			element.appendChild(ele);
+		}
+	}
+
+    function removeAllChild(id) {  
+        var div = document.getElementById(id);
+        //console.log(div);
+        //if(div.hasChildNodes())
+        while (div.hasChildNodes()) { //当div下还存在子节点时 循环继续  
+            div.removeChild(div.firstChild);   
+        }  
+    }
+	</script>
+</head>
+<body>
+<form action="wenzisearch.php" method="post" enctype="multipart/form-data">
+	请输入关键字：<input type="text" name="text" onkeyup="showHint(this.value)" >
+	<button  class="submit">搜索</button>
+	<dl>您可能想查询：</br></dl>
+	<dt id = "t"></dt>
+</form>
+<div class="suggest" id="search_suggest" style="display: none">
+        <ul>
+        	<li id="shows">one</li>
+        </ul>
+</div>
+</body>
+</html>

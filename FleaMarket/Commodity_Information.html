@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Commodity_Information</title>
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="./styles/lost.css">
+	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style type="text/css">
+		*{
+			margin:0;
+			padding:0;
+		}
+		body{
+
+		}
+		.head{
+			background: url('images/5.jpg');
+			height: 150px;
+			position: relative;
+		}
+		.head p{
+			display: block;
+			position: absolute;
+			margin-top: 60px;
+			font-family: "微软雅黑";
+			font-size:20px;	
+			color: #fff;
+			background:rgba(255,211,6,0.3);
+			width: 100%;
+			text-align: center;
+		}
+		.head .picture{
+			float: left;
+		}
+		input{
+			height: 20px;
+			margin-bottom: 15px;
+			border-color: #457CE6;
+
+		}
+		select{
+			font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 20px;
+			border-radius: 5px;
+			margin-bottom: 15px;
+		}
+		.face{	
+			width: 88%;
+			margin: 20px auto;
+			padding:10px 25px;
+			font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 20px;
+			color: #3c3c3c;
+			line-height: 40px;
+			box-shadow: 5px 5px 5px #FFF6E7;
+			background-color: #FFFCEC;
+			border-radius: 10px;
+			margin-left: 20px;
+			margin-right: 20px;
+		}
+		.upload{
+			font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 15px;
+			background: #FBB444;
+			color: #ffffff;
+			border: none;
+			border-radius: 5px;
+			padding:0px 15px;
+
+		}
+		.preview img{
+			margin-top: 10px;
+			width: 100%;
+		}
+		span{
+			width: 100%;
+			
+		}
+		span .submit_button{
+			border: 0;
+			background-color: #FFF2B4;
+			width: 100px;
+			height: 30px;
+			margin:0 auto;
+			display:block;
+		}
+		span .submit_button:hover{
+			background-color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<form>
+		<div class="head">
+			<p>Commodity Information</p>
+		</div>
+		<div class="face">
+		    <br/>
+		    <div class="preview" id="preview">
+				<!-- 图片显示 -->
+			</div>
+			<br/>
+			<select name="name" id="name" class="form-control" >
+				<option value="" disabled="disabled" selected="selected">关键字</option>
+				<option value="饭卡">饭卡</option>
+				<option value="钱包">钱包</option>
+				<option value="杯子">杯子</option>
+				<option value="U盘">U盘</option>
+				<option value="书本">书本</option>
+				<option value="文具">文具</option>
+				<option value="手机">手机</option>
+				<option value="钥匙">钥匙</option>
+				<option value="其他">其他</option>
+			</select>
+			<div class="card form-group has-warning" name="card" style="display:none">
+				<input type="text" name="cardn" class="form-control" placeholder="姓名" id="inputWarning1">
+				<input type="text" name="cardc" class="form-control" placeholder="卡号">
+			</div>
+			<select name="place" id="place" class="form-control">
+				<option value="" disabled="disabled" selected="selected">地点</option>
+				<option value="教一">教一</option>
+				<option value="教二">教二</option>
+				<option value="教三">教三</option>
+				<option value="教四">教四</option>
+				<option value="教五">教五</option>
+				<option value="图书馆">图书馆</option>
+				<option value="南操">南操</option>
+				<option value="北操">北操</option>
+				<option value="大活">大活</option>
+				<option value="其他">其他</option>
+				<option value="未知">我不知道</option>
+			</select>
+			<div class="place form-group has-warning">
+				<input type="text" class="form-control" name="deplace" placeholder="具体地点">
+			</div>
+			<label style="font-size:17px">时间：
+				<select name="datey" id="year" style="background:#fff;font-size:13px"></select>
+				<select name="datem" id="month" style="background:#fff;font-size:13px"></select>
+				<select name="dated" id="day" style="background:#fff;font-size:13px"></select>
+			</label><br>
+			<div class="form-group has-warning">
+				<input type="text" name="detail" class="form-control" placeholder="特征">
+				<input type="text" name="contact" class="form-control" placeholder="联系方式">
+			</div>
+			
+		</div>
+		<span>
+			<input class="submit_button" type="button" id="sure" onclick="change()" value="提交" />
+		</span>
+		<br/>
+	</form>
+</body>
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+(function (){
+	getData();
+}())
+
+function httpRequest(formData,type){
+	var request = new XMLHttpRequest();
+	request.open("POST","showandrevise.php");
+	request.responseType = 'json';
+	request.onload = function(){
+		console.log(this.response);
+		if(request.readyState == 4 && request.status == 200 && this.response){
+			switch(type){
+				case "show":
+					show(this.response);
+					break;
+				case "revise":
+					revise(this.response);
+					break;
+			}
+		}
+	}
+	request.send(formData);
+}
+
+function getData(){
+	var type = "show";
+	var str = window.location.search;
+	var formData = new FormData();
+	formData.append("id",str.split('=')[1].split('&')[0]);
+	formData.append("type",type);
+	httpRequest(formData,type);
+}
+
+function change() {
+	// console.log(document.getElementById('sure').value);
+
+	if(document.getElementById('sure').value === "提交"){
+
+		var name = document.getElementsByName("name")[0].value;
+		var contact = document.getElementsByName("contact")[0].value;
+		var cardc = document.getElementsByName("cardc")[0].value;
+		var cardn = document.getElementsByName("cardn")[0].value;
+		var reg = new RegExp("^\\d{15}$");
+
+		var cno_error = 1;//饭卡号没输错,没输饭卡时默认为没错
+
+		var iscard = 1;
+
+		if(document.getElementsByName("name")[0].value === "饭卡"){
+			iscard = 0;
+			if(cardc || cardn)
+				iscard = 1;
+		}
+
+		if(cardc){
+			if(!reg.test(cardc))
+				cno_error = 0;//饭卡号输错了
+		}
+
+		if(name && contact && iscard && cno_error){
+
+			var formData = new FormData();
+			var type = "revise";
+			formData.append("id",window.location.search.split('=')[1].split('&')[0]);
+			formData.append("type",type);
+			formData.append("name",document.getElementsByName("name")[0].value);
+			formData.append("cardn",document.getElementsByName("cardn")[0].value);
+			formData.append("cardc",document.getElementsByName("cardc")[0].value);
+			formData.append("place",document.getElementsByName("place")[0].value);
+			formData.append("deplace",document.getElementsByName("deplace")[0].value);
+			formData.append("detail",document.getElementsByName("detail")[0].value);
+			formData.append("contact",document.getElementsByName("contact")[0].value);
+			formData.append("datey",document.getElementsByName("datey")[0].value);
+			formData.append("datem",document.getElementsByName("datem")[0].value);
+			formData.append("dated",document.getElementsByName("dated")[0].value);
+
+			httpRequest(formData, type);
+
+			document.getElementById('sure').value = "修改";
+		}
+		else{
+			if(!name){
+				alert("请选择物品名")
+			}
+			else if(!iscard){
+				alert("请输入饭卡信息");
+			}
+			else if(!cno_error){
+				alert("请输入正确的饭卡号");
+			}
+			else if(!contact){
+				alert("请留下联系方式");
+			}
+		}
+	}
+	else if(document.getElementById('sure').value === "修改"){
+		document.getElementsByName("name")[0].disabled = "";
+		document.getElementsByName("cardn")[0].disabled = "";
+		document.getElementsByName("cardc")[0].disabled = "";
+		document.getElementsByName("place")[0].disabled = "";
+		document.getElementsByName("detail")[0].disabled = "";
+		document.getElementsByName("contact")[0].disabled = "";
+		document.getElementsByName("deplace")[0].disabled = "";
+		document.getElementsByName("datey")[0].disabled = "";
+		document.getElementsByName("datem")[0].disabled = "";
+		document.getElementsByName("dated")[0].disabled = "";
+
+		document.getElementById('sure').value = "提交";
+	}
+
+};
+
+function revise(data){
+	alert(data);
+	document.getElementsByName("name")[0].disabled = "true";
+	document.getElementsByName("cardn")[0].disabled = "true";
+	document.getElementsByName("cardc")[0].disabled = "true";
+	document.getElementsByName("place")[0].disabled = "true";
+	document.getElementsByName("detail")[0].disabled = "true";
+	document.getElementsByName("contact")[0].disabled = "true";
+	document.getElementsByName("deplace")[0].disabled = "true";
+	document.getElementsByName("datey")[0].disabled = "true";
+	document.getElementsByName("datem")[0].disabled = "true";
+	document.getElementsByName("dated")[0].disabled = "true";
+}
+
+function show(data){
+	//置图片
+	if(data.image){
+		var ele = document.createElement("img");
+		ele.src = data.image.toString();
+		var element = document.getElementById("preview");
+		element.appendChild(ele);
+	}
+	//置关键字框
+	if(data.name){
+		var name = document.getElementById("name");
+		for(var i = 0; i < name.length; i++){
+			if(name[i].value == data.name)
+				name[i].selected = 'selected';
+		}
+		if(data.name === "饭卡"){
+			document.getElementsByName("card")[0].style.display="block";
+			if(data.cname){
+				var cname = document.getElementsByName("cardn")[0];
+				cname.value = data.cname;
+			}
+			if(data.cno){
+				var cno = document.getElementsByName("cardc")[0];
+				cno.value = data.cno;
+			}
+			document.getElementsByName("detail")[0].style.display="none";
+		}
+		else{
+			document.getElementsByName("card")[0].style.display="none";
+		}
+	}
+	//置地点
+	if(data.place != "未知"){
+		var place = document.getElementById("place");
+		for(i = 0; i < place.length; i++){
+			if(place[i].value == data.place)
+				place[i].selected = 'selected';
+		}
+	}
+	//置具体地点
+	if(data.deplace){
+		var deplace = document.getElementsByName("deplace")[0];
+		deplace.value = data.deplace;
+	}
+	//置特征
+	if(data.detail){
+		var detail = document.getElementsByName("detail")[0];
+		detail.value = data.detail;
+	}
+	//置联系方式
+	if(data.contact){
+		var contact = document.getElementsByName("contact")[0];
+		contact.value = data.contact;		
+	}
+	//置时间
+	if(data.date){
+		var dates = data.date.split('-');
+		date("year",0);
+		date("month",1);
+		date("day",2);
+		function date(x,flag){
+			var tmp = document.getElementById(x);
+			var date = dates[flag][0] === '0' ? dates[flag][1] : dates[flag];
+			for(i = 0; i < tmp.length; i++){
+				if(tmp[i].value == date)
+					tmp[i].selected = 'selected';
+			}
+		}
+	}
+}
+
+
+var mydate=new Date();
+var year=mydate.getFullYear();
+var selectY=document.getElementById('year');
+var selectM=document.getElementById('month');
+var selectD=document.getElementById('day');
+var chose=document.getElementById('chose');
+
+document.getElementById('name').addEventListener("change",function(e){
+	if(e.target.value=='饭卡'){
+		document.getElementsByName("card")[0].style.display="block";
+	}
+	else{
+		document.getElementsByName("card")[0].style.display="none";
+	}
+});
+
+for(var i=0;i<2;i++){
+	var option=document.createElement('option');
+	option.innerHTML=year;
+	selectY.appendChild(option);
+	year--;
+}
+for(i=1;i<13;i++){
+	var option=document.createElement('option');
+	option.innerHTML=i;
+	selectM.appendChild(option);
+}
+for(i=1;i<32;i++){
+	var option=document.createElement('option');
+	option.innerHTML=i;
+	selectD.appendChild(option);
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>lost</title>
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="./styles/lost.css">
+	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style type="text/css">
+		.button{
+			border: 2px solid #FFD306;
+			display: block;
+			width: 150px;
+			margin:10px auto;
+			height: 40px;
+			font-family: "等线";
+			color: #FFD306;
+			background: #fff;
+			border-radius: 20px;
+		}
+		.preview img{
+			margin-top: 10px;
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<form>
+	<!-- <form action="lost.php" method="post" enctype="multipart/form-data"> -->
+		<div class="head">
+			<p>Lost</p>
+		</div>
+		<div class="face">
+			<span class="glyphicon glyphicon-bookmark" style="color:#FFD306;font-size:25px" ></span>
+			<select name="name" id="chose" class="form-control" >
+				<option value="" disabled="disabled" selected="selected">关键字</option>
+				<option value="饭卡">饭卡</option>
+				<option value="钱包">钱包</option>
+				<option value="杯子">杯子</option>
+				<option value="U盘">U盘</option>
+				<option value="书本">书本</option>
+				<option value="文具">文具</option>
+				<option value="手机">手机</option>
+				<option value="钥匙">钥匙</option>
+				<option value="其他">其他</option>
+			</select>
+			<div class="card form-group has-warning" name="card" style="display:none">
+				<input type="text" name="cardn" class="form-control" placeholder="姓名" id="inputWarning1">
+				<input type="text" name="cardc" class="form-control" placeholder="卡号">
+			</div>
+			<select name="place" id="" class="form-control">
+				<option value="" disabled="disabled" selected="selected">地点</option>
+				<option value="教一">教一</option>
+				<option value="教二">教二</option>
+				<option value="教三">教三</option>
+				<option value="教四">教四</option>
+				<option value="教五">教五</option>
+				<option value="图书馆">图书馆</option>
+				<option value="南操">南操</option>
+				<option value="北操">北操</option>
+				<option value="大活">大活</option>
+				<option value="其他">其他</option>
+				<option value="未知">我不知道</option>
+			</select>
+			<div class="place form-group has-warning">
+				<input type="text" class="form-control" name="deplace" placeholder="具体地点">
+			</div>
+			<label style="font-size:17px">时间：
+				<select name="datey" id="year" style="background:#fff;font-size:13px"></select>
+				<select name="datem" id="month" style="background:#fff;font-size:13px"></select>
+				<select name="dated" id="day" style="background:#fff;font-size:13px"></select>
+			</label><br>
+			<div class="form-group has-warning">
+				<input type="text" name="detail" class="form-control" placeholder="特征">
+				<input type="text" name="contact" class="form-control" placeholder="联系方式">
+			</div>
+			<button type="button"  class="upload" id="upload" >添加图片</button>&nbsp;<span id="upload_tips"></span>
+			<div class="preview" id="preview">
+				<!-- 图片显示 -->
+			</div>
+			<!-- <input type="file" name="file" id="upload_none" style="display:none"/> -->
+		</div>
+		<button type="button" class="button" id="sure"><span class="glyphicon glyphicon-ok" aria-hidden="true" style="font-size:25px"></span></button>
+		<!-- <input type="submit" name="" class="submit"> -->
+	</form>
+</body>
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+
+(function (){
+	Config();
+}())
+
+	function Config(){
+		var formData = new FormData();
+		formData.append("type","config");
+		formData.append("url",location.href.split('#')[0]);
+
+		var request = new XMLHttpRequest();
+		request.open("POST","weixin/jssdk.php");
+		request.responseType = "json";
+		request.onload = function()
+		{
+			if(request.readyState == 4 && request.status == 200)
+			{
+				wx.config({
+					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					appId: this.response.appId, // 必填，公众号的唯一标识
+					timestamp: this.response.timestamp, // 必填，生成签名的时间戳
+					nonceStr: this.response.noncestr, // 必填，生成签名的随机串
+					signature: this.response.signature,// 必填，签名，见附录1
+					jsApiList: ['checkJsApi','chooseImage','previewImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+				});
+			}
+		}
+		request.send(formData);
+	}
+
+	wx.ready(function(){
+
+		// var images = {
+		// 	localId:[],
+		// 	serverId:[]
+		// };
+		var lId;
+		var sId;
+		document.querySelector('#upload').onclick = function(){
+			//判断当前版本是否支持指定的js接口，支持批量判断
+			wx.checkJsApi({
+				jsApiList:['chooseImage','previewImage','uploadImage'],
+				// success:function(res){
+				// }
+				fail:function(){
+					alert("本设备不支持图片上传");
+				}
+			});
+			wx.chooseImage({
+				count: 1, // 默认9
+    			sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+    			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+				success:function(res){
+					lId = res.localIds;
+					// alert('已选择 ' + res.localIds.length + ' 张图片');
+					var div = document.getElementById("preview");
+					//console.log(div);
+					//if(div.hasChildNodes())
+					while (div.hasChildNodes()) { 
+						//当div下还存在子节点时 循环继续  
+						div.removeChild(div.firstChild);   
+					}
+					var ele = document.createElement("img");
+					ele.setAttribute("class","img-rounded");
+					ele.src = lId.toString();
+					var element = document.getElementById("preview");
+					element.appendChild(ele);
+				}
+			});
+		};
+		document.querySelector('#sure').onclick = function () {
+
+			var name = document.getElementsByName("name")[0].value;
+			var contact = document.getElementsByName("contact")[0].value;
+			var cardc = document.getElementsByName("cardc")[0].value;
+			var cardn = document.getElementsByName("cardn")[0].value;
+			var reg = new RegExp("^\\d{15}$");
+
+			var cno_error = 1;//饭卡号没输错,没输饭卡时默认为没错
+
+			var iscard = 1;
+
+			if(document.getElementsByName("name")[0].value === "饭卡"){
+				iscard = 0;
+				if(cardc || cardn)
+					iscard = 1;
+			}
+
+			if(cardc){
+				if(!reg.test(cardc))
+					cno_error = 0;//饭卡号输错了
+			}
+
+			if(name && contact && iscard && cno_error){
+				var formData = new FormData();
+				formData.append("name",name);
+				formData.append("cardn",cardn);
+				formData.append("cardc",cardc);
+				formData.append("place",document.getElementsByName("place")[0].value);
+				formData.append("deplace",document.getElementsByName("deplace")[0].value);
+				formData.append("detail",document.getElementsByName("detail")[0].value);
+				formData.append("contact",contact);
+				formData.append("datey",document.getElementsByName("datey")[0].value);
+				formData.append("datem",document.getElementsByName("datem")[0].value);
+				formData.append("dated",document.getElementsByName("dated")[0].value);
+				// console.log(formData);
+				if (!lId) {
+					// alert('请先上传图片');
+					formData.append("sid",null);
+					httpRequest();
+					return;
+				}
+				else{
+					wx.uploadImage({
+						localId: lId.toString(),
+						success: function (res) {
+							sId = res.serverId.toString();
+							formData.append("sid",sId);
+							// alert("图片已上传至微信服务器, serverId is :" + sId);
+							httpRequest();
+						},
+						fail: function (res) {
+							alert("图片未上传成功".JSON.stringify(res));
+						}
+					});
+				}
+			}
+			else{
+				if(!name){
+					alert("请选择物品名")
+				}
+				else if(!iscard){
+					alert("请输入饭卡信息");
+				}
+				else if(!cno_error){
+					alert("请输入正确的饭卡号");
+				}
+				else if(!contact){
+					alert("请留下联系方式");
+				}
+			}
+
+			function httpRequest(){
+				var request = new XMLHttpRequest();
+				request.open("POST","lost.php");
+				request.responseType = 'json';
+				request.onload = function(){
+					if(request.readyState == 4 && request.status == 200){
+						// alert(this.response);
+						if(this.response){
+							var res = this.response;
+							alert(res);
+						}
+						else{
+							alert("未收到后端响应");
+						}
+					}
+				}
+				request.send(formData);
+			}
+
+
+			// 上传多张图片
+			// var i = 0, length = images.localId.length;
+			// images.serverId = [];
+			// function upload() {
+			// 	wx.uploadImage({
+			// 	localId: images.localId[i],
+			// 	success: function (res) {
+			// 		i++;
+			// 		alert('已上传：' + i + '/' + length);
+			// 		images.serverId.push(res.serverId);
+			// 		if (i < length) {
+			// 			upload();
+			// 		}
+			// 	},
+			// 	fail: function (res) {
+			// 		alert(JSON.stringify(res));
+			// 	}
+			// 	});
+			// }
+			// upload();
+		};
+	});
+
+	var mydate=new Date();
+	var year=mydate.getFullYear();
+	var selectY=document.getElementById('year');
+	var selectM=document.getElementById('month');
+	var selectD=document.getElementById('day');
+	var chose=document.getElementById('chose');
+	document.getElementById('chose').addEventListener("change",function(e){
+		if(e.target.value=='饭卡'){
+			document.getElementsByName("card")[0].style.display="block";
+			document.getElementsByName("detail")[0].style.display="none";
+		}
+		else{
+			document.getElementsByName("card")[0].style.display="none";
+			document.getElementsByName("detail")[0].style.display="block";
+		}
+	});
+
+	// -----添加文件选中弹出事件
+
+	// document.getElementById('upload_none').addEventListener("change",function(e){
+	// 	var name=e.target.files[0].name;
+	// 	alert('您选中了文件名为 ' +e.target.files[0].name+ ' 的文件,点击提交后完成上传。');
+	// 	document.querySelector('#upload_tips').innerHTML = name;
+	// });
+
+	// -----end-----
+
+	for(var i=0;i<2;i++){
+		var option=document.createElement('option');
+		option.innerHTML=year;
+		selectY.appendChild(option);
+		year--;
+	}
+	for(i=1;i<13;i++){
+		var option=document.createElement('option');
+		option.innerHTML=i;
+		selectM.appendChild(option);
+	}
+	for(i=1;i<32;i++){
+		var option=document.createElement('option');
+		option.innerHTML=i;
+		selectD.appendChild(option);
+	}	
+
+	// var upload=document.getElementById('upload');
+	// var upload_none=document.getElementById('upload_none');
+	// upload.addEventListener("click",function(e){
+	// 	e.stopPropagation();
+	// 	upload_none.click();
+	// 	return false;
+	// },false);
+
+</script>
+</body>
+</html>

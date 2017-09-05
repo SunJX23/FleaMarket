@@ -1,0 +1,73 @@
+*{margin:0;padding:0;}
+body{
+
+}
+.head{
+	background: url('../images/5.png');
+	height: 250px;
+	position: relative;
+}
+.head p{
+	display: block;
+	position: absolute;
+	margin-top: 85px;
+	font-family: "微软雅黑";
+	font-size:40px;	
+	color: #fff;
+	background:rgba(255,211,6,0.3);
+	width: 100%;
+	text-align: center;
+}
+.head .picture{
+	float: left;
+}
+input{
+	height: 20px;
+	margin-bottom: 15px;
+	border-color: #457CE6;
+
+}
+select{
+	font-family: "等线";
+	font-size: 20px;
+	border-radius: 5px;
+	margin-bottom: 15px;
+}
+.face{	
+	width: 88%;
+	margin: 20px auto;
+	padding:10px 25px;
+	font-family: "等线";
+	font-size: 20px;
+	color: #3c3c3c;
+	line-height: 40px;
+	box-shadow: 5px 5px 5px #FFF6E7;
+	background-color: #FFFCEC;
+	border-radius: 10px;
+	/*border: 1px solid #66B3FF*/
+}
+.upload{
+	font-family: "等线";
+	font-size: 15px;
+	background: #FBB444;
+	color: #ffffff;
+	border: none;
+	border-radius: 5px;
+	padding:0px 15px;
+
+}
+.button{
+	border: 2px solid #FFD306;
+	display: block;
+	width: 150px;
+	margin:10px auto;
+	height: 40px;
+	font-family: "等线";
+	color: #FFD306;
+	background: #fff;
+	border-radius: 20px;
+}
+.preview img{
+	margin-top: 10px;
+	width: 100%;
+}

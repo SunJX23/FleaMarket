@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>lost_card</title>
+	<meta charset="utf-8">
+	<script src="./js/jquery-3.1.1.min.js"></script>
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style type="text/css">
+	    body{
+	    	background: url(images/11.jpg);
+	    	background-color: #fafbe9;
+	    	background-repeat: no-repeat;
+	    	background-size: 100%;
+	    }
+	    .container_one{
+	    	position: absolute;
+	    	width: 300px;
+	      	height: 220px;
+	    	left: 50%;
+	    	top: 28%;
+	    	background: #f2f2f2;
+	    	-webkit-box-shadow:#666 0px 0px 30px;
+	    	-moz-box-shadow:#666 0px 0px 0px 30px;
+	    	box-shadow: #666;
+	    	margin-left: -150px;
+	    	margin-top: -100px;
+	    	border-radius: 20px; 	
+	    }
+	    .container_two{
+	    	position: absolute;
+	    	display: none;
+	    	width: 300px;
+	      	height: 220px;
+	    	left: 50%;
+	    	top: 28%;
+	    	background: #f2f2f2;
+	    	-webkit-box-shadow:#b39292 0px 0px 30px;
+	    	-moz-box-shadow:#b39292 0px 0px 0px 30px;
+	    	box-shadow: #b39292;
+	    	margin-left: -150px;
+	    	margin-top: -100px;
+	    	border-radius: 20px; 
+	    	-webkit-perspective: 500;
+            -moz-perspective: 500;
+            -ms-perspective: 500;
+    		perspective: 500;
+	        -ms-transform: perspective(500px);
+           -moz-transform: perspective(500px); /*重要*/
+            transform-style: preserve-3d; /*重要*/
+            transition: all .3s;
+	    }
+	    .flipper{
+	    	position: relative;
+	    	margin: 0px;
+	    	width: 300px;
+	    	height: 220px;
+	    	transform-style: preserve-3d;
+	    	/*transition: all .3s;*/
+	    }
+	    /*.container_two:hover */
+	    .container:hover .flipper{
+	    	transform: rotateY(180deg);
+            /*transition: all .4s;*/
+	    }
+	    .front,.back{
+	    	position: absolute;
+	    	left: 0;
+	    	top: 0;
+	    	backface-visibility: hidden;
+	    	width: 100%;
+	    	height: 100%;
+	    }
+	    .front{
+	    	transform: rotateY(0deg);
+	    	/*z-index: 2;*/
+	    	/*transition: all .3s;*/
+	    }
+	    .back{
+	    	-webkit-box-shadow:#b39292 0px 0px 30px;
+	    	-moz-box-shadow:#b39292 0px 0px 0px 30px;
+	    	border-radius: 20px;
+	    	box-shadow: #b39292;
+	    	transform: rotateY(-180deg);
+	    	/*transition: all .3s;*/
+	    }
+	    .xinxi_one,.xinxi_two{
+	    	position: relative;
+	    	width: 230px;
+	    	height: 100px;
+	    	margin-left: 35px;
+	    	border: 0px solid #00f;
+	    }
+	    h3{
+	    	text-align: center;
+	    	color: #e1dbff;
+	    }
+	    input{
+	    	position: relative;
+	    	background: #fafafa;
+	    	width: 200px;
+	    	height: 35px;
+	    	border:2px;
+	    	margin-left: 5px;
+	    	border-radius: 20px;
+	    	outline: none;
+	    	padding-left: 20px;
+	    	line-height: 30px;
+	    	font-size: 14px;
+	    }
+	    input:hover{
+	    	background: #fff;
+	    	/*color: #dcb5ff;*/
+	    }
+	    button{
+	    	border:0;
+	    	background: #e1dbff;
+	    	/*-webkit-box-shadow:#666 0px 0px 10px;
+	    	-moz-box-shadow:#666 0px 0px 10px;
+	    	box-shadow: #666;*/
+	    	border-radius: 20px;
+	    	position: relative;
+	    	margin-left: 40px;
+	    	margin-top: 20px;
+	    	width: 150px;
+	    	height: 35px;
+	    	outline: none;
+	    	font-size: 16px;
+	    	color: #f3f3f3;
+	    }
+	    button:hover{
+	    	background: #f6e2ee;
+	    }
+	    .show{
+	    	padding: 5px;
+	    }
+	    p{
+	    	text-align: center;
+	    	line-height: 35px;
+	    }
+	    #card_button3{
+	    	border:0;
+	    	background: #e1dbff;
+	    	border-radius: 20px;
+	    	position: relative;
+	    	margin-left: 70px;
+	    	margin-top: -100px;
+	    	width: 150px;
+	    	height: 35px;
+	    	font-size: 16px;
+	    	color: #f3f3f3;
+	    }
+	    
+	</style>   
+</head>
+<body>
+    <div class="container_one" id="container_one">
+        <h3>lost card</h3>
+    	<div class="xinxi_one">
+    	    <input type="text"  class="text" id="text_one" placeholder="请输入卡号">
+    		<input type="text" class="text" id="text_one_1" placeholder="输入联系方式" style="margin-top: 15px;">
+    		<button class="card_button" id="card_button1" type="button" onclick="checkit()">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+    	</div>
+    </div>
+    <div class="container_two" id="container_two">
+        <div class="flipper">
+        	<div class="front">
+        		<h3>check card</h3>
+    			<div class="xinxi_two">
+    	    		<input type="text"  class="text" id="text_two" placeholder="请再次输入确认卡号">
+    	    		<input type="text" class="text" id="text_two_1"  style="margin-top: 15px;">
+    				<button class="card_button" id="card_button2" type="button" onclick="checkout()">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+    			</div>
+        	</div>
+        	<div class="back">
+        	    <div class="show">
+        	    	<div class="sming">
+        	    		<p class="show0_0" style="display: none;">掩面哭泣...<br/>目前还木有人找到你的饭卡~</p>
+        	    		<p class="show1_0" style="display: none;">你的运气开挂啦！<br/>联系他就能找回你的饭卡哟~</p>
+        	    		<p class="show2_0" style="display: none;">再给你一次看联系方式的机会<br/>这次可别忘了~</p>
+        	    		<p class="show3_0" style="display: none;">掩面大哭...<br/>依然木有人找到你的饭卡</p>
+        	    		<p class="show4_0" style="display: none;">服务器不知道抽的什么风<br/>挂失失败</p>
+        	    	</div>
+        	    	<div class="jming">
+        	    		<p class="show0_1" style="display: none;">静候佳音哟~</p>
+        	    		<p class="show1_1" style="display: none;"></p>
+        	    		<p class="show2_1" style="display: none;">不如去搜索页面看看~</p>
+        	    		<p class="show3_1" style="display: none;">不然再挂失一次试试？</p>
+        	    	</div>
+        	    	<button type="button" id="card_button3">知道了</button>
+        	    </div>
+        	</div>
+        </div>
+    </div>
+</body>
+<script>
+	function checkit(){
+		var first_div = document.getElementById("container_one");
+		var card_number = document.getElementById("text_one").value;
+		var phone_number = document.getElementById("text_one_1").value;
+		var reg = new RegExp("^\\d{15}$");
+		console.log(card_number);
+		if(reg.test(card_number)){
+			if(card_number!="" && phone_number !=""){
+				var next_div = document.getElementById("container_two");
+				next_div.style.display = "block";
+				first_div.style.display = "none";
+				document.getElementById("text_two_1").value = document.getElementById("text_one_1").value;
+			}
+			//if(card_number){
+				//旋转
+				//nCurrRota = xinxi_r.style.transform;
+	            //xinxi_r.style.transform = 'rotateY('+ (nCurrRota+180) +'deg)';
+				//var next_div = document.getElementById("container_two");
+				//next_div.style.display = "block";
+				//first_div.style.display = "none";
+			//}
+			else if(card_number){
+				alert("请输入联系方式");
+			}
+			else if(phone_number){
+	            alert("请输入卡号");
+			}
+			else{
+				alert("请输入信息");
+			}
+		}
+		else{
+			alert("请输入正确的饭卡号");
+		}
+
+	}
+	function checkout(){
+		var value1 = document.getElementById("text_one").value;
+		var value2 = document.getElementById("text_two").value;
+		if(value2){
+			if(value1 == value2){
+				//console.log("ele");
+				var rotated = document.getElementsByClassName("container_two")[0];
+				rotated.style.transform = "rotateY(180deg)";
+				//var str = document.getElementsByClassName("show-front");
+				//if(/show-front/.test(str)){
+                 //document.getElementsByClassName("show-front")[0] = replace(/show-front/,'show-back');
+                 //document.getElementsByClassName("show-front")[0].setAttribute("class","show-back");
+				//}
+
+				//var str = this.className;
+				//if(/show-front/.test(str)){
+		       // document.getElementsByClassName("show-front") = str.replace(/show-front/,'show-back');
+				//}
+				//else if(/show-back/.test(str)){
+				//this.className = str.replace(/show-back/,'show-front');
+				//}
+				httpResponse();
+			}
+			else{
+				alert("您两次输入的卡号不一致，挂失失败！");
+				var first_div = document.getElementById("container_one"); 
+				var next_div = document.getElementById("container_two");
+				next_div.style.display = "none";
+				first_div.style.display = "block";
+				document.getElementById("text_one").value = "";
+				document.getElementById("text_two").value = "";
+			}
+		}
+		else{
+			alert("请输入卡号");
+		}
+	}
+
+function show(data){
+	if(data.pickup.toString() === '1'){
+		//有人捡了
+		var node = document.createTextNode(data.contact.toString());
+		document.getElementsByClassName('show1_1')[0].appendChild(node);
+		document.getElementsByClassName('show1_1')[0].style.display = "block";
+		if(data.isfirst.toString() === '1'){
+			document.getElementsByClassName('show1_0')[0].style.display = "block";
+		}
+		else{
+			document.getElementsByClassName('show2_0')[0].style.display = "block";
+		}
+	}
+	else{
+		//没人捡啊
+		if(data.success.toString() === "0"){
+			//上传挂失信息失败
+			console.log(data.success.toString());
+			document.getElementsByClassName('show4_0')[0].style.display = "block";
+			document.getElementsByClassName('show3_1')[0].style.display = "block";
+		}
+		else{
+			if(data.isfirst.toString() === '1'){
+				//第一次挂失
+				document.getElementsByClassName('show0_0')[0].style.display = "block";
+				document.getElementsByClassName('show0_1')[0].style.display = "block";
+			}
+			else{
+				//挂了几次了
+				document.getElementsByClassName('show3_0')[0].style.display = "block";
+				document.getElementsByClassName('show2_1')[0].style.display = "block";
+			}
+		}
+	}
+}
+
+function httpResponse(){
+	var formData = new FormData();
+	formData.append("card",document.getElementById('text_two').value);
+	formData.append("phone",document.getElementById('text_two_1').value);
+	var request = new XMLHttpRequest();
+	request.open("POST","lost_card.php");
+	request.responseType = 'json';
+	request.onload = function(){
+		console.log(this.response);
+		if(request.readyState == 4 && request.status == 200 && this.response){
+			show(this.response);
+		}
+	}
+	request.send(formData);
+}
+
+</script>
+</html>
