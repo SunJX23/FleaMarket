@@ -39,32 +39,17 @@
 			$query = mysqli_query($con, "insert into users (uID,unick) values ('$openid','$unick')");
 		}
 
+		$baseurl = 'http://115.29.38.30/FleaMarket/FleaMarket';
+
 		switch ($_GET['state']) {
 			case '1':
-				header("Location:http://115.29.38.30/lost.html");
+				header("Location:$baseurl/lost.html");
 				break;
 			case '2':
-				header("Location:http://115.29.38.30/find.html");
+				header("Location:$baseurl/searchlost.html");
 				break;
 			case '3':
-				header("Location:http://115.29.38.30/searchlost.html");
-				break;
-			case '4':
-				header("Location:http://115.29.38.30/searchfind.html");
-				break;
-			case '5':
-				header("Location:http://115.29.38.30/Personal_Center.html");
-				break;
-			case '6':
-				header("Location:http://115.29.38.30/thankswall.html");
-				break;
-			case '7':
-				header("Location:http://115.29.38.30/lost_card.html");
-				break;
-			case '8':
-				header("Location:http://115.29.38.30/weixin/a.php");
-				break;
-			default:
+				header("Location:$baseurl/Personal_Center.html");
 				break;
 		}
 	}else{
