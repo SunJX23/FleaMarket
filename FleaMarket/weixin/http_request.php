@@ -1,7 +1,6 @@
 <?php
 	require_once(dirname(dirname(__FILE__)).'/class/Cache.php');
-	define('APPID','wx868a7ba7368b6e07');
-	define('APPSECRET','1bc2224cec9b78d51afc5301918cd5fd');
+	require_once('const.php');
 	
 	function https_request($url, $data = null, $timeout=30)
 	{

@@ -1,5 +1,5 @@
 <?php
-define("TOKEN", "q135vn4QA31NoNo5V10A4a4j65E31l33"); //TOKEN值
+require_once('const.php');
 $wechatObj = new wechat();
 $wechatObj->valid();
 class wechat {
