@@ -16,7 +16,7 @@
 		},
 		{
 			"type":"view",
-			"name":"跳蚤市场",
+			"name":"物品交易",
 			"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Control.php&response_type=code&scope=snsapi_userinfo&state=2#wechat_redirect"
 
 		},
@@ -26,7 +26,7 @@
 			"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Control.php&response_type=code&scope=snsapi_userinfo&state=3#wechat_redirect"
 		}]
 	}';
-	echo json_decode($jsonmenu);
+	echo $jsonmenu;
 
 	$result = https_request($url,$jsonmenu);
 	var_dump($result);
