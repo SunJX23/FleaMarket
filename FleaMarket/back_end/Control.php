@@ -1,5 +1,5 @@
 <?php
-	session_save_path(dirname(dirname(dirname(dirname(dirname(__FILE__)))))."/cache/");
+	session_save_path(dirname(dirname(dirname(dirname(__FILE__))))."/cache/");
 	session_start();
 	header("Content-type: text/html; charset=utf-8");
 	require_once('http_request.php');

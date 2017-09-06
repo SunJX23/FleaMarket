@@ -54,22 +54,3 @@
 		$result = array('appId' => $appid, 'timestamp' => $timestamp, 'jsapi_ticket' => $jsapi_ticket, 'signature' => $signature, 'noncestr' => $noncestr);
 		return json_encode($result);
 	}
-
-    header('Content-type','application/json');
-
-	switch ($_POST['type']) {
-		case 'access_token':
-			echo getAccess_token();
-			break;
-
-		case 'jsapi_ticket':
-			echo getJsapi_ticket();
-			break;
-
-		case 'config':
-			echo getConfig();
-			break;
-
-		default:
-			break;
-	}
