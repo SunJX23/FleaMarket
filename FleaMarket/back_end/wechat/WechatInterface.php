@@ -1,7 +1,7 @@
 <?php
     require_once(dirname(dirname(__FILE__)).'/base/Cache.php');
     require_once(dirname(dirname(__FILE__)).'/base/Http.php');
-    require_once(dirname(dirname(__FILE__)).'const.php');
+    require_once(dirname(dirname(__FILE__)).'/const.php');
 	function getAccess_token(){
 		$appid = APPID;
 		$appsecret = APPSECRET;

@@ -1,8 +1,8 @@
 <?php
-	session_save_path(dirname(dirname(dirname(dirname(__FILE__))))."/cache/");
+	session_save_path(dirname(dirname(dirname(dirname(__FILE__))))."/cache");
 	session_start();
 	header("Content-type: text/html; charset=utf-8");
-	require_once('http_request.php');
+	require_once(dirname(__FILE__).'/base/Http.php');
 	require_once("const.php");
 	$appid = APPID;
 	$appsecret = APPSECRET;
@@ -28,15 +28,16 @@
 		$output = https_request($url);
 		$jsoninfo = json_decode($output, true);
 		$unick = $jsoninfo['nickname'];
+		$headimgurl = $jsoninfo['headimgurl'];
 		$_SESSION['nickname'] = $unick;
 		$query = mysqli_query($con, "select unick from users where uID = '$openid'");
 		$result = mysqli_fetch_array($query);
 		if($result){
 			if($result['unick'] != $unick)
-				$query = mysqli_query($con, "update users set unick = '$unick' where uID = '$openid' ");
+				$query = mysqli_query($con, "update users set unick = '$unick' uimage = '$headimgurl' where uID = '$openid' ");
 		}
 		else{
-			$query = mysqli_query($con, "insert into users (uID,unick) values ('$openid','$unick')");
+			$query = mysqli_query($con, "insert into users (uID,unick,uimage) values ('$openid','$unick','$headimgurl')");
 		}
 
 		$baseurl = 'http://115.29.38.30/FleaMarket/FleaMarket';

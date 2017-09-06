@@ -26,7 +26,7 @@
 			"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Control.php&response_type=code&scope=snsapi_userinfo&state=3#wechat_redirect"
 		}]
 	}';
-	echo $jsonmenu;
+	echo json_decode($jsonmenu);
 
 	$result = https_request($url,$jsonmenu);
 	var_dump($result);
