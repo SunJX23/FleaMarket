@@ -24,6 +24,10 @@
 			"type":"view",
 			"name":"我的",
 			"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Control.php&response_type=code&scope=snsapi_userinfo&state=3#wechat_redirect"
+		},{
+			"type":"view",
+			"name":"测试",
+			"url":"http://115.29.38.30/FleaMarket/FleaMarket/test.html";
 		}]
 	}';
 	echo $jsonmenu;
