@@ -34,17 +34,16 @@
 			<span class="glyphicon glyphicon-bookmark" style="color:#FFD306;font-size:25px" ></span>
 			<select name="name" id="chose" class="form-control" >
 				<option value="" disabled="disabled" selected="selected">关键字</option>
-				<option value="饭卡">饭卡</option>
-				<option value="钱包">钱包</option>
-				<option value="杯子">杯子</option>
-				<option value="U盘">U盘</option>
-				<option value="书本">书本</option>
-				<option value="文具">文具</option>
-				<option value="手机">手机</option>
-				<option value="钥匙">钥匙</option>
+				<option value="书">书</option>
+				<option value="CD">CD</option>
+				<option value="衣服">衣服</option>
+				<option value="包">包</option>
+				<option value="生活用品">生活用品</option>
+				<option value="床上用品">床上用品</option>
+				<option value="配饰">配饰</option>
 				<option value="其他">其他</option>
 			</select>
-			<div class="card form-group has-warning" name="card" style="display:none">
+			<!-- <div class="card form-group has-warning" name="card" style="display:none">
 				<input type="text" name="cardn" class="form-control" placeholder="姓名" id="inputWarning1">
 				<input type="text" name="cardc" class="form-control" placeholder="卡号">
 			</div>
@@ -61,18 +60,18 @@
 				<option value="大活">大活</option>
 				<option value="其他">其他</option>
 				<option value="未知">我不知道</option>
-			</select>
-			<div class="place form-group has-warning">
+			</select> -->
+			<!-- <div class="place form-group has-warning">
 				<input type="text" class="form-control" name="deplace" placeholder="具体地点">
-			</div>
-			<label style="font-size:17px">时间：
+			</div> -->
+			<!-- <label style="font-size:17px">时间：
 				<select name="datey" id="year" style="background:#fff;font-size:13px"></select>
 				<select name="datem" id="month" style="background:#fff;font-size:13px"></select>
 				<select name="dated" id="day" style="background:#fff;font-size:13px"></select>
-			</label><br>
+			</label><br> -->
 			<div class="form-group has-warning">
-				<input type="text" name="detail" class="form-control" placeholder="特征">
-				<input type="text" name="contact" class="form-control" placeholder="联系方式">
+				<input type="text" name="goodsName" class="form-control" placeholder="物品名称">
+				<input type="text" name="sale" class="form-control" placeholder="价格">
 			</div>
 			<button type="button"  class="upload" id="upload" >添加图片</button>&nbsp;<span id="upload_tips"></span>
 			<div class="preview" id="preview">
@@ -161,15 +160,14 @@
 		document.querySelector('#sure').onclick = function () {
 
 			var name = document.getElementsByName("name")[0].value;
-			var contact = document.getElementsByName("contact")[0].value;
-			var cardc = document.getElementsByName("cardc")[0].value;
-			var cardn = document.getElementsByName("cardn")[0].value;
-			var reg = new RegExp("^\\d{15}$");
+			var contact = document.getElementsByName("goodsName")[0].value;
+			var cardc = document.getElementsByName("sale")[0].value;
+			var reg = new RegExp("^\\d{6}(.\b)$");
 
-			var cno_error = 1;//饭卡号没输错,没输饭卡时默认为没错
-
-			var iscard = 1;
-
+			if(sale){
+				if(!reg.test(sale))
+					alert("价格必须为最多为6位数")；
+			}
 			if(document.getElementsByName("name")[0].value === "饭卡"){
 				iscard = 0;
 				if(cardc || cardn)
@@ -217,17 +215,15 @@
 			}
 			else{
 				if(!name){
-					alert("请选择物品名")
+					alert("请选择关键字");
 				}
-				else if(!iscard){
-					alert("请输入饭卡信息");
+				else if(!goodsName){
+					alert("请输入物品名称");
 				}
-				else if(!cno_error){
-					alert("请输入正确的饭卡号");
+				else if(!sale){
+					alert("请输入价格");
 				}
-				else if(!contact){
-					alert("请留下联系方式");
-				}
+
 			}
 
 			function httpRequest(){
@@ -273,22 +269,22 @@
 		};
 	});
 
-	var mydate=new Date();
-	var year=mydate.getFullYear();
-	var selectY=document.getElementById('year');
-	var selectM=document.getElementById('month');
-	var selectD=document.getElementById('day');
-	var chose=document.getElementById('chose');
-	document.getElementById('chose').addEventListener("change",function(e){
-		if(e.target.value=='饭卡'){
-			document.getElementsByName("card")[0].style.display="block";
-			document.getElementsByName("detail")[0].style.display="none";
-		}
-		else{
-			document.getElementsByName("card")[0].style.display="none";
-			document.getElementsByName("detail")[0].style.display="block";
-		}
-	});
+	// var mydate=new Date();
+	// var year=mydate.getFullYear();
+	// var selectY=document.getElementById('year');
+	// var selectM=document.getElementById('month');
+	// var selectD=document.getElementById('day');
+	// var chose=document.getElementById('chose');
+	// document.getElementById('chose').addEventListener("change",function(e){
+	// 	if(e.target.value=='饭卡'){
+	// 		document.getElementsByName("card")[0].style.display="block";
+	// 		document.getElementsByName("detail")[0].style.display="none";
+	// 	}
+	// 	else{
+	// 		document.getElementsByName("card")[0].style.display="none";
+	// 		document.getElementsByName("detail")[0].style.display="block";
+	// 	}
+	// });
 
 	// -----添加文件选中弹出事件
 
@@ -300,22 +296,22 @@
 
 	// -----end-----
 
-	for(var i=0;i<2;i++){
-		var option=document.createElement('option');
-		option.innerHTML=year;
-		selectY.appendChild(option);
-		year--;
-	}
-	for(i=1;i<13;i++){
-		var option=document.createElement('option');
-		option.innerHTML=i;
-		selectM.appendChild(option);
-	}
-	for(i=1;i<32;i++){
-		var option=document.createElement('option');
-		option.innerHTML=i;
-		selectD.appendChild(option);
-	}	
+	// for(var i=0;i<2;i++){
+	// 	var option=document.createElement('option');
+	// 	option.innerHTML=year;
+	// 	selectY.appendChild(option);
+	// 	year--;
+	// }
+	// for(i=1;i<13;i++){
+	// 	var option=document.createElement('option');
+	// 	option.innerHTML=i;
+	// 	selectM.appendChild(option);
+	// }
+	// for(i=1;i<32;i++){
+	// 	var option=document.createElement('option');
+	// 	option.innerHTML=i;
+	// 	selectD.appendChild(option);
+	// }	
 
 	// var upload=document.getElementById('upload');
 	// var upload_none=document.getElementById('upload_none');
