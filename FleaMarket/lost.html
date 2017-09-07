@@ -9,7 +9,6 @@
 	<style type="text/css">
 		.button{
 			border: 2px solid #FFD306;
-			display: block;
 			width: 150px;
 			margin:10px auto;
 			height: 40px;
@@ -31,7 +30,8 @@
 			<p>上传物品</p>
 		</div>
 		<div class="face">
-			<span class="glyphicon glyphicon-bookmark" style="color:#FFD306;font-size:25px" ></span>
+			<span class="glyphicon glyphicon-remove" style="color:#FFD306;font-size:25px;padding-left:95%;" ></span>
+			<span class="glyphicon glyphicon-bookmark" style="color:#FFD306;font-size:25px" >上传物品</span>
 			<select name="name" id="chose" class="form-control" >
 				<option value="" disabled="disabled" selected="selected">关键字</option>
 				<option value="书">书</option>
@@ -71,15 +71,18 @@
 			</label><br> -->
 			<div class="form-group has-warning">
 				<input type="text" name="goodsName" class="form-control" placeholder="物品名称">
-				<input type="text" name="sale" class="form-control" placeholder="价格">
+				<input type="text" name="sale" class="form-control" placeholder="价格/￥">
+				<textarea class="form-control" rows="3" name="detail" placeholder="详细描述"></textarea>
 			</div>
 			<button type="button"  class="upload" id="upload" >添加图片</button>&nbsp;<span id="upload_tips"></span>
 			<div class="preview" id="preview">
 				<!-- 图片显示 -->
 			</div>
 			<!-- <input type="file" name="file" id="upload_none" style="display:none"/> -->
+			<button type="button" class="button" id="sure"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+			
 		</div>
-		<button type="button" class="button" id="sure"><span class="glyphicon glyphicon-ok" aria-hidden="true" style="font-size:25px"></span></button>
+		
 		<!-- <input type="submit" name="" class="submit"> -->
 	</form>
 </body>
