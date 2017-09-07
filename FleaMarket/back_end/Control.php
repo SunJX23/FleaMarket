@@ -61,16 +61,22 @@
 
 		if (empty($_GET['state'])) return;
 
+		$url = 'searchlost';
+
 		switch ($_GET['state']) {
 			case '1':
-				header("Location:$baseurl/lost.html");
+				$url = 'lost';
 				break;
 			case '2':
-				header("Location:$baseurl/searchlost.html");
+				$url = 'searchlost';
 				break;
 			case '3':
-				header("Location:$baseurl/Personal_Center.html");
+				$url = 'Personal_Center';
+				break;
+			case '4':
+				header("Location:");
 				break;
 		}
+		header("Location:$baseurl/$url.html");
 	}
 ?>
