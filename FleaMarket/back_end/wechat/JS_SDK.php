@@ -1,5 +1,5 @@
 <?php
-
+	require_once('WechatInterface.php');
     header('Content-type','application/json');
 
 	switch ($_POST['type']) {

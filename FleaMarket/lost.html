@@ -98,7 +98,7 @@
 		formData.append("url",location.href.split('#')[0]);
 
 		var request = new XMLHttpRequest();
-		request.open("POST","weixin/jssdk.php");
+		request.open("POST","back_end/wechat/JS_SDK.php");
 		request.responseType = "json";
 		request.onload = function()
 		{
