@@ -168,29 +168,20 @@
 				if(!reg.test(sale))
 					alert("价格必须为最多为6位数")；
 			}
-			if(document.getElementsByName("name")[0].value === "饭卡"){
-				iscard = 0;
-				if(cardc || cardn)
-					iscard = 1;
-			}
+			
 
-			if(cardc){
-				if(!reg.test(cardc))
-					cno_error = 0;//饭卡号输错了
-			}
-
-			if(name && contact && iscard && cno_error){
+			if(name && goodsName && sale){
 				var formData = new FormData();
 				formData.append("name",name);
-				formData.append("cardn",cardn);
-				formData.append("cardc",cardc);
-				formData.append("place",document.getElementsByName("place")[0].value);
-				formData.append("deplace",document.getElementsByName("deplace")[0].value);
-				formData.append("detail",document.getElementsByName("detail")[0].value);
-				formData.append("contact",contact);
-				formData.append("datey",document.getElementsByName("datey")[0].value);
-				formData.append("datem",document.getElementsByName("datem")[0].value);
-				formData.append("dated",document.getElementsByName("dated")[0].value);
+				formData.append("goodsName",cardn);
+				formData.append("sale",cardc);
+				// formData.append("place",document.getElementsByName("place")[0].value);
+				// formData.append("deplace",document.getElementsByName("deplace")[0].value);
+				// formData.append("detail",document.getElementsByName("detail")[0].value);
+				// formData.append("contact",contact);
+				// formData.append("datey",document.getElementsByName("datey")[0].value);
+				// formData.append("datem",document.getElementsByName("datem")[0].value);
+				// formData.append("dated",document.getElementsByName("dated")[0].value);
 				// console.log(formData);
 				if (!lId) {
 					// alert('请先上传图片');
