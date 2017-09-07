@@ -1,5 +1,5 @@
 <?php
-	require_once('http_request.php');
+	require_once(dirname(dirname(__FILE__)).'/base/Http.php');
 	if(isset($_GET['sid'])){
 		var_dump($_GET['sid']);
 		file_put_contents('../demo/xx', $_GET['sid']);

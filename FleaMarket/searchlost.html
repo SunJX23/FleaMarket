@@ -256,29 +256,26 @@
 					<ul>
 						<li>
 						    <i class="glyphicon glyphicon-time"></i>
-						    <select name="time" id="" class="form-control">
+						    <select name="order" id="" class="form-control">
 						    	<option value="" style="color: #aaa" disabled selected>价格排序</option>
 						    	<option value="">不排序</option>
 								<option value="orc">正序</option>
-								<option value="desc">倒序/option>
+								<option value="desc">倒序</option>
 						    </select>
 						</li>
 						<li>
 						    <i class="glyphicon glyphicon-tree-deciduous"></i>
-						    <select name="place" id="" class="form-control">
-								<option value="" style="color: #aaa" disabled selected>地点</option>
-						    	<option value="">全部地点</option>
-								<option value="教一">教一</option>
-								<option value="教二">教二</option>
-								<option value="教三">教三</option>
-								<option value="教四">教四</option>
-								<option value="教五">教五</option>
-								<option value="图书馆">图书馆</option>
-								<option value="南操">南操</option>
-								<option value="北操">北操</option>
-								<option value="大活">大活</option>
-								<option value="其他">其他</option>
-								<option value="未知">我不知道</option>
+						    <select name="sale" id="" class="form-control">
+								<option value="" style="color: #aaa" disabled selected>价格区间</option>
+						    	<option value="">全部价格</option>
+								<option value="0_50">0-50</option>
+								<option value="50_100">50-100</option>
+								<option value="100_200">100-200</option>
+								<option value="200_300">200-300</option>
+								<option value="300_400">300-400</option>
+								<option value="400_500">400-500</option>
+								<option value="500_1000">500-1000</option>
+								<option value="1000以上">1000以上</option>
 						    </select>
 						</li>
 						<li>
@@ -286,14 +283,13 @@
 						    <select name="name" id="" class="form-control">
 						    	<option value="" style="color: #aaa" disabled selected>种类</option>
 						    	<option value="">全部种类</option>
-								<option value="饭卡">饭卡</option>
-								<option value="钱包">钱包</option>
-								<option value="杯子">杯子</option>
-								<option value="U盘">U盘</option>
-								<option value="书本">书本</option>
-								<option value="文具">文具</option>
-								<option value="手机">手机</option>
-								<option value="钥匙">钥匙</option>
+								<option value="书">书</option>
+								<option value="CD">CD</option>
+								<option value="衣服">衣服</option>
+								<option value="包">包</option>
+								<option value="生活用品">生活用品</option>
+								<option value="床上用品">床上用品</option>
+								<option value="配饰">配饰</option>
 								<option value="其他">其他</option>
 						    </select>
 						</li>
@@ -454,16 +450,14 @@ function getData(posturl,formData){
 //页面你初始时与分类筛选时数据更新
 function firstData(){
 	var obj = { 
-		time:document.getElementsByName("time")[0].value,
-		place:document.getElementsByName("place")[0].value,
+		order:document.getElementsByName("order")[0].value,
+		sale:document.getElementsByName("sale")[0].value,
 		name:document.getElementsByName("name")[0].value
 	};
-
 	var formData = new FormData();
+	formData.append("order", obj.order);
+	formData.append("sale", obj.sale);
 	formData.append("name", obj.name);
-	formData.append("time", obj.time);
-	formData.append("place", obj.place);
-	formData.append("isLose","1");
     getData("searchlost.php", formData);
 }
 

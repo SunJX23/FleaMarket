@@ -1,6 +1,6 @@
 <?php
-	require_once('http_request.php');
-	header('Content-type','application/json');
+
+    header('Content-type','application/json');
 
 	switch ($_POST['type']) {
 		case 'access_token':
@@ -18,5 +18,3 @@
 		default:
 			break;
 	}
-
-?>
