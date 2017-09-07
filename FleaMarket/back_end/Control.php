@@ -76,6 +76,9 @@
 			case '4':
 				$url = 'test';
 				break;
+			case '5':
+				header("Location:http://115.29.38.30/searchlost.html");
+				return;
 		}
 		header("Location:$baseurl/$url.html");
 	}
