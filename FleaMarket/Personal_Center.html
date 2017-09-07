@@ -3,8 +3,7 @@
 <head>
 	<title>PersonalCenter</title>
 	<meta charset="UTF-8">
-	<script src="./js/jquery-3.1.1.min.js"></script>
-	<script src="./js/bootstrap.min.js"></script>
+	<link href="./css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style type="text/css">
 
@@ -112,12 +111,12 @@
 </head>
 <body>
     <div class="headshows">
-    	<h1>Personal Center</h1>
+    	<h1>个人中心</h1>
     </div>
     <div class="lost-find">
         <div class="lost">
            <div class="lost_title">
-           	   <h2>lost</h2>
+           	   <h2>我的卖品</h2>
            </div>
            <div class="lostshow">
                 <figure class="lostshow_datas" id="lostshow_datas">
@@ -126,13 +125,13 @@
         </div>
         <br />
         <hr/>
-    	<div class="find">
+    	<!-- <div class="find">
     	    <div class="find_title">
            	   <h2>find</h2>
             </div>
             <div class="findshow">
                 <figure class="findshow_datas" id="findshow_datas">
-                    <!--<div class="find-img-box" id="find-img-box" >
+                    <div class="find-img-box" id="find-img-box" >
         	            <img src="5.jpg" style="width: 200px;height: 150px;">
 		            </div>
 		            <div class="find-words-box" id="find-words-box">
@@ -144,16 +143,21 @@
 							<p>地点：火星</p>
 							<p>联系：喂？妖妖灵么！</p>
 			            </div>
-					</div> -->
-					<!--<span>
+					</div> 
+					<span>
     					<button class="find_revise" type="button" style="display: none">修改</button>
     					<button class="find_deleteit" type="button" style="display: none">删除</button>
-    				</span>-->     
+    				</span>   
 				</figure>
            	</div>   	
-    	</div>
+    	</div>  -->
+    </div>
+    <div>
+    	<button type="button" class="btn btn-info" id="create"><span class="glyphicon glyphicon-plus" aria-hidden="true" style="font-size:25px"></span></button>
     </div>
 </body>
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
 <script>
 
 (function (){
@@ -336,4 +340,5 @@ function delete_detail(gid){
 	}
 }
 </script>
+
 </html>
