@@ -162,7 +162,7 @@
 			var name = document.getElementsByName("name")[0].value;
 			var goodsName = document.getElementsByName("goodsName")[0].value;
 			var sale = document.getElementsByName("sale")[0].value;
-			var reg = new RegExp("/^[0-9]{1,6}([.][0-9]{1,5})?$/");
+			var reg = new RegExp(/^[0-9]{1,6}([.][0-9]{1,5})?$/);
 
 			if(!name){
 				alert("请选择关键字");
