@@ -7,7 +7,7 @@ class Cache {
 
     //cache constructor, optional expiring time and cache path
     public function __construct($exp_time = 7200) {
-        $path = (dirname(dirname(__FILE__)))."/cache/";
+        $path = dirname(dirname(dirname(dirname(dirname(__FILE__)))))."/cache/";
         $this -> cache_expire = $exp_time;
         $this -> cache_path = $path;
     }

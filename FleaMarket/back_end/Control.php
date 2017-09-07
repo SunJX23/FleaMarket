@@ -1,5 +1,5 @@
 <?php
-	session_save_path((dirname(__FILE__))."/cache/");
+	session_save_path(dirname(dirname(dirname(dirname(__FILE__))))."/cache/");
 	session_start();
 	require_once(dirname(__FILE__).'/base/Http.php');
 	require_once("const.php");
@@ -74,7 +74,7 @@
 				$url = 'Personal_Center';
 				break;
 			case '4':
-				header("Location:");
+				$url = 'test';
 				break;
 		}
 		header("Location:$baseurl/$url.html");
