@@ -1,9 +1,9 @@
 <?php
-	session_save_path(dirname(dirname(__FILE__))."/cache/");
+	session_save_path((dirname(__FILE__))."/cache/");
 	session_start();
 	header("Content-type: text/html; charset=utf-8");
-	require_once('http_request.php');
-	require_once(dirname(dirname(__FILE__))."/config.php");
+	require_once(dirname(__FILE__).'/base/Http.php');
+	require_once("const.php");
 	$appid = APPID;
 	$appsecret = APPSECRET;
 	if (isset($_GET['code'])){
@@ -28,43 +28,29 @@
 		$output = https_request($url);
 		$jsoninfo = json_decode($output, true);
 		$unick = $jsoninfo['nickname'];
+		$headimgurl = $jsoninfo['headimgurl'];
 		$_SESSION['nickname'] = $unick;
 		$query = mysqli_query($con, "select unick from users where uID = '$openid'");
 		$result = mysqli_fetch_array($query);
 		if($result){
 			if($result['unick'] != $unick)
-				$query = mysqli_query($con, "update users set unick = '$unick' where uID = '$openid' ");
+				$query = mysqli_query($con, "update users set unick = '$unick' uimage = '$headimgurl' where uID = '$openid' ");
 		}
 		else{
-			$query = mysqli_query($con, "insert into users (uID,unick) values ('$openid','$unick')");
+			$query = mysqli_query($con, "insert into users (uID,unick,uimage) values ('$openid','$unick','$headimgurl')");
 		}
+
+		$baseurl = 'http://115.29.38.30/FleaMarket/FleaMarket';
 
 		switch ($_GET['state']) {
 			case '1':
-				header("Location:http://115.29.38.30/lost.html");
+				header("Location:$baseurl/lost.html");
 				break;
 			case '2':
-				header("Location:http://115.29.38.30/find.html");
+				header("Location:$baseurl/searchlost.html");
 				break;
 			case '3':
-				header("Location:http://115.29.38.30/searchlost.html");
-				break;
-			case '4':
-				header("Location:http://115.29.38.30/searchfind.html");
-				break;
-			case '5':
-				header("Location:http://115.29.38.30/Personal_Center.html");
-				break;
-			case '6':
-				header("Location:http://115.29.38.30/thankswall.html");
-				break;
-			case '7':
-				header("Location:http://115.29.38.30/lost_card.html");
-				break;
-			case '8':
-				header("Location:http://115.29.38.30/weixin/a.php");
-				break;
-			default:
+				header("Location:$baseurl/Personal_Center.html");
 				break;
 		}
 	}else{
