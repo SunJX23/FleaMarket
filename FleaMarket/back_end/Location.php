@@ -46,6 +46,8 @@
 					}
 				}
 			}
+			session_unset();
+			session_destroy();
 			Redirection();
 		} else {
 			echo '用户授权失败';
