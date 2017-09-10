@@ -2,6 +2,8 @@
 
 class Error
 {
+    static public $instance;
+
     private $error = array(
         'PARAM_DROP'    => array(101, '参数缺失'),
         'USER_LOST'     => array(202, '无用户信息'),
@@ -23,6 +25,18 @@ class Error
         'NAME_INVALID' => array(302, '物品名格式错误'),
         'PRICE_INVALID' => array(303, '价钱格式错误'),
     );
+
+    static public function _instance() {
+        if (is_null(self::$instance))
+            self::$instance = new static();
+        return self::$instance;
+    }
+
+    public function __construct() {
+    }
+
+    public function __clone() {
+    }
 
     public function __get($param) {
         $const = explode('__', $param);

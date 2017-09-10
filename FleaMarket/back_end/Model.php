@@ -10,7 +10,7 @@ class Model {
     public function __construct() {
         $this->con = mysqli_connect(HOST,USERNAME,PASSWORD,DB);
         $this->con->set_charset('utf8');
-        $this->error_code = new Error();
+        $this->error_code = Error::_instance();
     }
 
     public function uploadGoods() {
@@ -39,7 +39,7 @@ class Model {
         return $response;
     }
 
-    public function insertData ($data, $db) {
+    protected function insertData ($data, $db) {
         if (count($data) <= 0)
             return false;
         $column = '';
@@ -58,7 +58,7 @@ class Model {
         mysqli_close($this->con);
     }
 
-    public function checkParam ($value, $rule) {
+    protected function checkParam ($value, $rule) {
         if (empty($value))
             return $this->error_code->PARAM_DROP;
         if (!preg_match($rule['check_type'], $value))
@@ -66,7 +66,7 @@ class Model {
         return array('ret' => 1);
     }
 
-    final public static function filter($formdata) {
+    final protected static function filter($formdata) {
         return addslashes(htmlspecialchars($formdata));
     }
 }
