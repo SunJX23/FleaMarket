@@ -39,6 +39,18 @@ class Model {
         return $response;
     }
 
+    public function getChatLogs () {
+        
+    }
+
+    public function getContacts () {
+        $i_uID = isset($_SESSION['openid']) ? $_SESSION['openid'] : "olKuAwHPm_1vwuv1dh6GD20bRlMM";
+        $you_uID = isset($_POST['uID']) ? $_POST['uID'] : null;
+        if (is_null($you_uID))
+            return $this->error_code->USER_LOST;
+        
+    }
+
     public function getPersonalData () {
         $uID = isset($_SESSION['openid']) ? $_SESSION['openid'] : "olKuAwHPm_1vwuv1dh6GD20bRlMM";
         $sql = "select ID,name,price,detail,image,category from fleainfo where uID = '$uID' order by ID desc";
@@ -112,10 +124,3 @@ class Model {
 // goodsName 物品名称
 // sale 价格
 // detail 商品详情
-
-5
-1 2 3 3 5
-3
-1 2 1
-2 4 5
-3 5 3
