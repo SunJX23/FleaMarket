@@ -144,9 +144,6 @@
     			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 				success:function(res){
 					lId = res.localIds;
-					for(var i = 0; i < lId.length; i++){
-						alert(lId[i]);
-					}
 					// alert('已选择 ' + res.localIds.length + ' 张图片');
 					var div = document.getElementById("preview");
 					//console.log(div);
@@ -155,11 +152,13 @@
 						//当div下还存在子节点时 循环继续  
 						div.removeChild(div.firstChild);   
 					}
-					var ele = document.createElement("img");
-					ele.setAttribute("class","img-rounded");
-					ele.src = lId.toString();
-					var element = document.getElementById("preview");
-					element.appendChild(ele);
+					for(var i = 0; i < lId.length; i++){
+						alert(lId[i]);
+						var ele = document.createElement("img");
+						ele.setAttribute("class","img-rounded");
+						ele.src = lId[i].toString();
+						div.appendChild(ele);
+					}
 				}
 			});
 		};
