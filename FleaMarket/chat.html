@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>contacts</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<style type="text/css">    
+	    .container_two{
+	    	position: absolute;
+	    	display: block;
+	    	width: 100%;
+	      	height: 100%;
+	    	left: 0;
+	    	top: 0;
+	    	background: #f2f2f2;
+	    	
+	    	-webkit-perspective: 500;
+            -moz-perspective: 500;
+            -ms-perspective: 500;
+    		perspective: 500;
+	        -ms-transform: perspective(500px);
+           	-moz-transform: perspective(500px); /*重要*/
+            transform-style: preserve-3d; /*重要*/
+            transition: all .3s;
+	    }
+	    .flipper{
+	    	position: relative;
+	    	margin: 0px;
+	    	width: 100%;
+	    	height: 100%;
+	    	transform-style: preserve-3d; 	
+	    }
+	    .container:hover .flipper{
+	    	transform: rotateY(180deg);
+	    }
+	    .front,.back{
+	    	position: absolute;
+	    	left: 0;
+	    	top: 0;
+	    	backface-visibility: hidden;
+	    	width: 100%;
+	    	height: 100%;
+	    }
+	    .front{
+	    	transform: rotateY(0deg);	
+	    }
+	    .back{
+	    	transform: rotateY(-180deg);	
+	    }
+	    body{
+			background:url() no-repeat;
+			background-size:100%;
+		}
+		@media all and (min-width: 640px) {
+		    body,html,.wenwen-footer,.speak_window{
+		    	width:640px!important;
+		    	margin:0 auto;
+		    }
+		    .speak_window,.wenwen-footer{
+		    	left:50%!important;
+		    	margin-left:-320px
+		    }
+		}
+		input,button{outline:none;}
+		.his_Name{
+			width: 100%;
+			position: fixed;
+			top: -5px;
+			left: 0;
+			background: #8eacb5;
+			border-bottom: solid 1px #ddd;
+			box-sizing: border-box;
+			text-align: center;
+		}
+
+		.wenwen-footer{
+			width:100%;
+			position:fixed;
+			bottom:-5px;
+			left:0;
+			background:#fff;
+			padding:3%;
+			border-top:solid 1px #ddd;
+			box-sizing:border-box;
+		}
+		.wenwen_btn,.wenwen_help{
+			width:15%;
+			text-align:center;
+		}
+		.wenwen_btn img,.wenwen_help img{
+			height:40px;
+		}
+		.wenwen_text{
+			height:40px;
+			border-radius:5px;
+			border:solid 1px #636162;
+			box-sizing:border-box;
+			width:80%;
+			text-align:center;
+			overflow:hidden;
+			margin-left:2%;
+		}
+		.circle-button{
+			padding:0 5px;
+		}
+		.wenwen_text .circle-button{
+			font-size:14px;
+			color:#666;
+			line-height:38px;
+		}
+		.write_box{
+			background:#fff;
+			width:100%;
+			height:40px;
+			line-height:40px;
+		}
+		.write_box input{
+			height:40px;
+			padding:0 5px;
+			line-height:40px;
+			width:100%;
+			box-sizing:border-box;
+			border:0;
+		}
+		.wenwen_help button{
+			width:95%;
+			background:#42929d;
+			color:#fff;
+			border-radius:5px;
+			border:0;
+			height:40px;
+		}
+		#wenwen{
+			height:100%;
+		}
+		.speak_window{
+			overflow-y:scroll;
+			height:90%;
+			width:100%;
+			position: fixed;
+			top:70px;
+			left:0;
+		}
+		.speak_box{
+			margin-bottom:70px;
+			padding:10px;
+		}
+		.question,.answer{
+			margin-bottom:10px;
+		}
+		.question{
+			text-align:right;
+		}
+		.question div{
+			display:inline-block;
+		}
+		.left{float:left;}
+		.right{float:right;}
+		.clear{clear:both;}
+		.heard_img{
+			height:50px;
+			width:50px;
+			border-radius:5px;
+			overflow:hidden;
+			background:#ddd;
+		}
+		.heard_img img{
+			width:100%;
+			height:100%;
+		}
+		.question_text,.answer_text{
+			box-sizing:border-box;
+			position:relative;
+			display:table-cell;
+			min-height:50px;
+		}
+		.question_text{
+			padding-right:20px;
+		}
+		.answer_text{
+			padding-left:20px;
+		}
+		.question_text p,.answer_text p{
+			border-radius:10px;
+			padding:.5rem;
+			margin:0;
+			font-size:14px;
+			line-height:28px;
+			box-sizing:border-box;
+			vertical-align:middle;
+			display:table-cell;
+			word-wrap:break-word;
+		}
+		.answer_text p{
+			background:#eeeeee;
+		}
+		.question_text p{
+			background:#42929d;
+			color:#eeeeee;
+			text-align:left;
+		}
+		.question_text i,.answer_text i{
+			width:0;height:0;
+			border-top:5px solid transparent;
+			border-bottom:5px solid transparent;
+			position:absolute;
+			top:25px;
+		}
+		.answer_text i{
+			border-right:10px solid #eeeeee;
+			left:10px;
+		}
+		.question_text i{
+			border-left:10px solid #42929d;
+			right:10px;
+		}
+		.answer_text p a{
+			color:#42929d;
+			display:inline-block;
+		}
+		.write_list{
+			position:absolute;
+			left:0;width:100%;
+			background:#f9fbfd;
+			border-top:solid 1px #ddd;
+			padding:5px;
+			line-height:30px;
+		}
+		.change{
+			float: left;
+			width: 10%;
+			height: 45px;
+			background: url(images/返回.png) no-repeat; 
+			border: none; 
+			margin-top: 10px;
+		}
+	</style>   
+</head>
+<body>
+    <div class="container_two" id="container_two">
+        <div class="flipper">
+        	<div class="front">
+        		<div class="his_Name">
+			        <button class="change" onclick="changeback()"></button>
+			        <div class="yourName" style="float: left;width: 80%;">
+			        	<p class="nicheng">集齐十枚召唤乔布斯</p>
+			        </div>
+			        <div class="tip" style="float: right;width: 10%;"></div>  	
+			    </div>
+			    <div class="speak_window">
+						<div class="speak_box">
+							<div class="answer">
+									<div class="heard_img left">
+										<img src="images/头像.jpg">
+									</div>
+									<div class="answer_text">
+										<p>瞎几把测试。。</p>
+										<i></i>
+									</div>
+							</div>
+						</div>
+				</div>
+				<div class="wenwen-footer">
+					<div class="wenwen_text left">
+					    <div class="write_box">
+					        <input type="text" class="left" onKeyUp="keyup()" placeholder="请输入内容"  id="input_msg" />
+					    </div>   
+					</div>
+					<div class="wenwen_help right">
+					    <button onClick="up_say()" class="right">发送</button>
+					</div>
+					<div style="opacity:0;" class="clear"></div>
+				</div>
+        	</div>
+        	<div class="back">
+        		<div class="his_Name" style="height: 65px;">
+			        <div class="yourName" style="float: left;width: 100%;height: 60px">
+			        	<p style="font-size: 18px">联系人</p>
+			        </div>  	
+			    </div>
+        	    <div class="show" style="position: absolute; top: 60px; height: 90%;width: 100%;" onclick="turn_msg()">
+        	    	<div class="speak_contacts" style="width: 100%;height: 60px;border-bottom: solid 1px #d4e1e6;margin-top: 10px;">
+        	    		<div class="img_box" style="float: left;width: 20%;text-align: center;">
+        	    			<img src="images/头像.jpg" style="width: 50px;height: 50px; border-radius: 5px;">
+        	    		</div>
+        	    		<div style="float: left;width: 80%;">
+        	    			<span style="font-size: 14px;color: #4f5258;" class="nicheng">昵称</span>
+        	    			<br>
+        	    			<span style="font-size: 13px;color: #989b9c;">找个月黑风高的夜晚交易吧</span>
+        	    		</div>
+        	    	</div>
+        	    </div>
+        	</div>
+        </div>
+    </div>
+</body>
+<script>
+	function changeback(){
+		var my_slide=$('.speak_window');
+		if(my_slide.css('left')=='0px'){
+			my_slide.animate({
+				left:'100%'
+			})
+		}
+		var rotated = document.getElementsByClassName("container_two")[0];
+		rotated.style.transform = "rotateY(180deg)";
+		autoWidth();
+		for_bottom();
+		//向后端获取数据
+		/*
+		var hol = $(this).attr("rel"); 
+		var data = "action=getlink&id="+hol;      
+		$.getJSON("server.php",data, function(json){ 
+			$("#name").html(json.name); 	
+			$("#sex").html(json.sex); 
+			$("#tel").html(json.tel); 
+			$("#email").html(json.email); 
+		}); 
+		*/
+	}
+	function turn_msg(){
+		var rotated = document.getElementsByClassName("container_two")[0];
+		rotated.style.transform = "rotateY(0deg)";
+		var hol = $(this).attr("rel");
+		var data = "action=getlink&id="+hol; 
+		$.getJSON("contacts.php",data, function(json){  
+			$("#speak_you").html(json.sex); 
+			$("#speak_my").html(json.tel); 
+			$("#speak_myimg").html(json.email);
+			$("#speak_youimg").html(json.email); 
+		}); 
+	}
+	///////////测试,点击返回发送后
+	function up_say(){
+		$('.write_list').remove();
+	    var text = $('.write_box input').val(),
+	        str  = '<div class="question">';
+	        str += '<div class="heard_img right"><img src="images/头像.jpg"/></div>';
+	        str += '<div class="question_text clear"><p>'+text+'</p><i></i>';
+	        str += '</div></div>';
+	    if(text == ''){
+	        alert('请输入消息内容');
+	        $('.write_box input').focus();
+	    }else{
+	        $('.speak_box').append(str);
+	        $('.write_box input').val('');
+	        $('.write_box input').focus();
+	        //给后端传数据
+	        /*
+	        $.ajax({
+				type:'POST',
+				url:'',
+				contentType: "application/json;charset=utf-8",
+		        dataType: 'json',
+		        date:{},
+		        success: function (response) {
+		            if (response.d == "SendOk") {
+		            $('#message').val("");
+		            $('#btn_send').val("发送");
+		            $('#btn_send').button();
+		            }
+		        },
+			});
+			*/
+	        
+	        //对方回复间距
+	        autoWidth();
+	        for_bottom();
+	        setTimeout(function(){
+	        	//对方头像和回复内容
+	            var ans  = '<div class="answer"><div class="heard_img left"><img src="images/头像.jpg"/></div>';
+	            	ans += '<div class="answer_text"><p>您发送的文字是：'+text+'</p><i></i>';
+	        		ans += '</div></div>';
+	        	$('.speak_box').append(ans);
+				for_bottom();
+	        },1000);
+	    }
+	}
+	//回车事件
+	document.onkeydown = function(key){
+		if(!key){
+			key = window.event;
+		}
+		if((key.keyCode || key.which) == 13){
+			up_say(document.getElementById('input_msg').value);
+		}
+	}
+	//监听键盘输入
+	function keyup(){
+		var footer_height = $('.wenwen-footer').outerHeight(),
+			text = $('.write_box input').val(),
+			str = '<div class="write_list">'+text+'</div>';
+		if (text == '' || text == undefined){
+			$('.write_list').remove();
+		}else{
+			$('.wenwen-footer').append(str);
+			$('.write_list').css('bottom',footer_height);
+		}
+	}
+	function for_bottom(){
+		var speak_height = $('.speak_box').height();
+		$('.speak_box,.speak_window').animate({scrollTop:speak_height},500);
+	}	
+	function autoWidth(){
+		$('.question_text').css('max-width',$('.question').width()-60);
+	}
+	autoWidth();
+</script>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+</html>

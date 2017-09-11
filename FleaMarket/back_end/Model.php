@@ -39,6 +39,43 @@ class Model {
         return $response;
     }
 
+    public function getPersonalData () {
+        $uID = isset($_SESSION['openid']) ? $_SESSION['openid'] : "olKuAwHPm_1vwuv1dh6GD20bRlMM";
+        $sql = "select ID,name,price,detail,image,category from fleainfo where uID = '$uID' order by ID desc";
+        $query = mysqli_query($this->con,$sql);
+        if($query){
+            while($row=mysqli_fetch_array($query)){
+                $result[]=$row;
+            }
+        }
+        if (isset($result)){
+            $null="无";
+            $datas = array();
+            foreach($result as $xinxi)
+            {
+                $id = $xinxi['ID'];
+                $name = $xinxi['name'];
+                $price = $xinxi['price'];
+                $detail = $xinxi['detail'];
+                $category = $xinxi['category'];
+                $image = $xinxi['image'];
+
+                $data = array();
+                $data['id'] = $id;
+                $data['name'] = $name;
+                $data['price'] = $price;
+                $data['detail'] = $detail;
+                $data['category'] = $category;
+                $data['image'] = $image;
+
+                $datas[] = $data;
+            }
+            return $datas;
+        } else {
+            return $this->error_code->GETDATA_FAILED;
+        }
+    }
+
     protected function insertData ($data, $db) {
         if (count($data) <= 0)
             return false;
@@ -75,3 +112,10 @@ class Model {
 // goodsName 物品名称
 // sale 价格
 // detail 商品详情
+
+5
+1 2 3 3 5
+3
+1 2 1
+2 4 5
+3 5 3
