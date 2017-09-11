@@ -139,11 +139,14 @@
 				}
 			});
 			wx.chooseImage({
-				count: 1, // 默认9
+				count: 9, // 默认9
     			sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
     			sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
 				success:function(res){
 					lId = res.localIds;
+					for(var i = 0; i < lId.length; i++){
+						alert(lId[i]);
+					}
 					// alert('已选择 ' + res.localIds.length + ' 张图片');
 					var div = document.getElementById("preview");
 					//console.log(div);
