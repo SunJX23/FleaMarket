@@ -18,10 +18,8 @@ class Model {
 
     // 上传物品
     public function uploadGoods() {
-        $msg = isset($_POST['sid']) ? json_encode($_POST['sid']) : '没有sid';
-        return array('ret' => -1, 'msg' => $msg);
         /* $key => $val, $key:前端传来数据对应的键，$val:数据库表中对应的键 */
-        $forms = array('name' => 'category','goodsName' => 'name','sale' => 'price','detail' => 'detail');
+        $forms = array('name' => 'category', 'goodsName' => 'name', 'sale' => 'price', 'detail' => 'detail');
         $data = array();
         $response = array();
         foreach ($forms as $key => $val) {
@@ -34,8 +32,9 @@ class Model {
                     return $response;
             }
         }
-        $sid = isset($_POST['sid']) ? $_POST['sid'] : null;
-        $data['image'] = downloadImg($sid);
+        $serverIDs = isset($_POST['sid']) ? explode(',', $_POST['sid']) : null;
+        $total = isset($_POST['total']) ? $_POST['total'] : 0;
+        $data['image'] = downloadImg($serverIDs);
         $time = time();
         $data['ID'] = $time;
         for ($i = 0; $i < 3; $i++)
@@ -206,6 +205,11 @@ class Model {
     final protected static function filter($formdata) {
         return addslashes(htmlspecialchars($formdata));
     }
+
+    protected function testfile($str) {
+        $myfile = fopen("testfile.txt", "w");
+        fwrite($myfile, $str);
+    }
 }
 
 // name 分类名
@@ -214,35 +218,35 @@ class Model {
 // detail 商品详情
 
 
-{
-    'ret' => 1,
-    'total' => 0,
-    'contact' => array(
-        'i' => array(
-            'uID' => '',
-            'nick' => '九夏三冬',
-            'headimg' => 'http/'
-        ),
-        'u' => array(
-            'uID' => '',
-            'nick' => '',
-            'headimg' => 'http/'
-        )
-    )
-    'data' => array(
-        0 => array(
-            'time' => '',
-            'chatlog' => 'soeijaesejf',
-            'isme' => 'i'/'u'
-        ),
-        1 => array(
-            'time' => '',
-            'chatlog' => 'soeijaesejf',
-            'isme' => 'i'/'u'
-        )
-    )
-}
-{
-    'ret' => -1,
-    'msg' => '错误原因'
-}
+// {
+//     'ret' => 1,
+//     'total' => 0,
+//     'contact' => array(
+//         'i' => array(
+//             'uID' => '',
+//             'nick' => '九夏三冬',
+//             'headimg' => 'http/'
+//         ),
+//         'u' => array(
+//             'uID' => '',
+//             'nick' => '',
+//             'headimg' => 'http/'
+//         )
+//     )
+//     'data' => array(
+//         0 => array(
+//             'time' => '',
+//             'chatlog' => 'soeijaesejf',
+//             'isme' => 'i'/'u'
+//         ),
+//         1 => array(
+//             'time' => '',
+//             'chatlog' => 'soeijaesejf',
+//             'isme' => 'i'/'u'
+//         )
+//     )
+// }
+// {
+//     'ret' => -1,
+//     'msg' => '错误原因'
+// }

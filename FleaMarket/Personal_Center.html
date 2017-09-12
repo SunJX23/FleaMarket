@@ -419,7 +419,6 @@ function delete_detail(gid){
 						div.removeChild(div.firstChild);   
 					}
 					for(var i = 0; i < lId.length; i++){
-						alert(lId[i]);
 						var ele = document.createElement("img");
 						ele.setAttribute("class","img-rounded");
 						ele.src = lId[i].toString();
@@ -487,12 +486,11 @@ function delete_detail(gid){
           						if (i < length) {
             						upload();
           						}else{
-          							alert('---miao---');
           							formData.append("sid",sId);
           							formData.append("total",length);
+									// alert("sid:"+JSON.stringify(sId));
           							httpRequest(formData);
           						}
-          						alert("---haha----"+sId[i].toString());
         					},
         					fail: function (res) {
           						alert("图片未上传成功"+JSON.stringify(res));
@@ -520,7 +518,6 @@ function delete_detail(gid){
 		}
 				
 		function httpRequest(formData){
-			alert('---------------');
 			var request = new XMLHttpRequest();
 			request.open("POST","back_end/Controller.php?type=uploadGoods");
 			request.responseType = 'json';
@@ -528,7 +525,6 @@ function delete_detail(gid){
 				if(request.readyState == 4 && request.status == 200){
 					if(this.response){
 						var res = this.response;
-						alert(this.response);
 						if (res.ret === 1)
 							alert("上传成功");
 						else if (res.ret === -1)

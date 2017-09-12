@@ -8,14 +8,14 @@
 			return null;
 		$images = null;
 		foreach($serverIds as $serverId) {
-			$gImage = null;
-			if (download_image($serverId, $gImage))
-				$images .= '_img_'.$gImage;
+			$gname = null;
+			if (download_image($serverId, $gname))
+				$images .= $gname;
 		}
 		return $images;
 	}
 
-	function download_image($serverId, &$gImage) {
+	function download_image($serverId, &$gname) {
 		$up_image = false;
 		// 图片命名
 		$x = '00';
@@ -23,7 +23,8 @@
 		while (file_exists(dirname(dirname(dirname(__FILE__))).'/photo/'.$date.$x.'.jpg')){
 			$x++;
 		}
-		$gImage = $date.$x.'.jpg';
+		$gImage = dirname(dirname(dirname(__FILE__))).'/photo/'.$date.$x.'.jpg';
+		$gname = 'photo/'.$date.$x.'.jpg';
 
 		// 从微信服务器下载图片
 		$access_token = getAccess_token();
