@@ -190,28 +190,28 @@ function hide(){
 	win.style.display="none";
 }
 
-// (function (){
-// 	getData();
-// }())
+(function (){
+	Initialization();
+}())
 
 // function getData(){
 // 	httpRequest("?isLose=1");
 // 	httpRequest("?isLose=0");
 // }
 
-// function httpRequest(str){
-// 	var request = new XMLHttpRequest();
-// 	request.open("GET", "Personal_Center.php" + str, true);
-// 	request.responseType = 'json';
-// 	request.onload=function()
-// 	{
-// 		if (request.readyState==4 && request.status==200)
-// 		{
-// 			showData(this.response,"lostshow_datas");
-// 		}
-// 	}
-// 	request.send();
-// }
+function Initialization(str){
+	var request = new XMLHttpRequest();
+	request.open("GET", "Personal_Center.php" + str, true);
+	request.responseType = 'json';
+	request.onload=function()
+	{
+		if (request.readyState==4 && request.status==200)
+		{
+			showData(this.response,"lostshow_datas");
+		}
+	}
+	request.send();
+}
 
 
 //lostdata
@@ -469,7 +469,9 @@ function delete_detail(gid){
 				// console.log(formData);
 				if (!lId) {
 					// alert('请先上传图片');
+					var total=0;
 					formData.append("sid",[]);
+					formData.append("total",total);
 					httpRequest(formData);
 					return;
 				} else{
@@ -477,6 +479,7 @@ function delete_detail(gid){
 					function upload() {
 						wx.uploadImage({
         					localId: lId[i],
+        					isShowProgressTips: 0,
         					success: function (res) {
           						i++;
           						//alert('已上传：' + i + '/' + length);
@@ -486,6 +489,7 @@ function delete_detail(gid){
           						}else{
           							alert('---miao---');
           							formData.append("sid",sId);
+          							formData.append("total",length);
           							httpRequest(formData);
           						}
           						alert("---haha----"+sId[i].toString());
