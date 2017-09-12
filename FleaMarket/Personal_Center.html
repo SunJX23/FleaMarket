@@ -469,7 +469,9 @@ function delete_detail(gid){
 				// console.log(formData);
 				if (!lId) {
 					// alert('请先上传图片');
+					var total=0;
 					formData.append("sid",[]);
+					formData.append("total",total);
 					httpRequest(formData);
 					return;
 				} else{
