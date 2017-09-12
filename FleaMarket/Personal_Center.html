@@ -190,28 +190,28 @@ function hide(){
 	win.style.display="none";
 }
 
-(function (){
-	getData();
-}())
+// (function (){
+// 	getData();
+// }())
 
-function getData(){
-	httpRequest("?isLose=1");
-	httpRequest("?isLose=0");
-}
+// function getData(){
+// 	httpRequest("?isLose=1");
+// 	httpRequest("?isLose=0");
+// }
 
-function httpRequest(str){
-	var request = new XMLHttpRequest();
-	request.open("GET", "Personal_Center.php" + str, true);
-	request.responseType = 'json';
-	request.onload=function()
-	{
-		if (request.readyState==4 && request.status==200)
-		{
-			showData(this.response,"lostshow_datas");
-		}
-	}
-	request.send();
-}
+// function httpRequest(str){
+// 	var request = new XMLHttpRequest();
+// 	request.open("GET", "Personal_Center.php" + str, true);
+// 	request.responseType = 'json';
+// 	request.onload=function()
+// 	{
+// 		if (request.readyState==4 && request.status==200)
+// 		{
+// 			showData(this.response,"lostshow_datas");
+// 		}
+// 	}
+// 	request.send();
+// }
 
 
 //lostdata
@@ -329,6 +329,7 @@ function jump(gid){
 // function contact(gid){
 // 	window.location.href = "chat.html?id="+gid;
 // }
+//
 
 function delete_detail(gid){
 	var sure = confirm("确认删除物品信息？");
@@ -391,8 +392,8 @@ function delete_detail(gid){
 		// 	localId:[],
 		// 	serverId:[]
 		// };
-		var lId;
-		var sId;
+		var lId = [];
+		var sId = [];
 		document.querySelector('#upload').onclick = function(){
 			//判断当前版本是否支持指定的js接口，支持批量判断
 			wx.checkJsApi({
@@ -422,6 +423,7 @@ function delete_detail(gid){
 						var ele = document.createElement("img");
 						ele.setAttribute("class","img-rounded");
 						ele.src = lId[i].toString();
+						lId[i] = lId[i].toString();
 						div.appendChild(ele);
 					}
 				}
@@ -471,21 +473,44 @@ function delete_detail(gid){
 					httpRequest(formData);
 					return;
 				} else{
-					wx.uploadImage({
-						localId: lId,
-						success: function (res) {
-							sId = res.serverId;
-							formData.append("sid",sId);
-							for(var i = 0; i < sId.length; i++){
-								alert(sId[i]);
-							}
-							// alert("图片已上传至微信服务器, serverId is :" + sId);
-							httpRequest(formData);
-						},
-						fail: function (res) {
-							alert("图片未上传成功".JSON.stringify(res));
-						}
-					});
+					var i = 0, length = lId.length;
+					function upload() {
+						wx.uploadImage({
+        					localId: lId[i],
+        					success: function (res) {
+          						i++;
+          						//alert('已上传：' + i + '/' + length);
+          						sId.push(res.serverId);
+          						if (i < length) {
+            						upload();
+          						}else{
+          							alert('---miao---');
+          							formData.append("sid",sId);
+          							httpRequest(formData);
+          						}
+          						alert("---haha----"+sId[i].toString());
+        					},
+        					fail: function (res) {
+          						alert("图片未上传成功"+JSON.stringify(res));
+        					}
+      					});
+					}
+					upload();
+					// wx.uploadImage({
+					// 	localId: lId[0],
+					// 	success: function (res) {
+					// 		sId = res.serverId;
+					// 		formData.append("sid",sId);
+					// 		for(var i = 0; i < sId.length; i++){
+					// 			alert(sId[i]);
+					// 		}
+					// 		// alert("图片已上传至微信服务器, serverId is :" + sId);
+					// 		httpRequest(formData);
+					// 	},
+					// 	fail: function (res) {
+					// 		alert("图片未上传成功"+JSON.stringify(res));
+					// 	}
+					// });
 				}
 			}
 		}
@@ -499,6 +524,7 @@ function delete_detail(gid){
 				if(request.readyState == 4 && request.status == 200){
 					if(this.response){
 						var res = this.response;
+						alert(this.response);
 						if (res.ret === 1)
 							alert("上传成功");
 						else if (res.ret === -1)
