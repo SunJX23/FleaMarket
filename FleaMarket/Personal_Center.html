@@ -483,6 +483,9 @@ function delete_detail(gid){
           						sId.push(res.serverId);
           						if (i < length) {
             						upload();
+          						}else{
+          							formData.append("sid",sId);
+          							httpRequest(formData);
           						}
           						alert("---haha----"+sId[i].toString());
         					},
