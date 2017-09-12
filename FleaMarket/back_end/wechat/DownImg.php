@@ -1,25 +1,47 @@
 <?php
 	require_once(dirname(dirname(__FILE__)).'/base/Http.php');
-	if(isset($_GET['sid'])){
-		var_dump($_GET['sid']);
-		file_put_contents('../demo/xx', $_GET['sid']);
-		$access_token = getAccess_token();
-		downlodimg($access_token,$_GET['sid']);
+	require_once(dirname(dirname(__FILE__)).'/base/ImgEdit.php');
+	require_once('WechatInterface.php');
+
+	function downloadImg($serverIds) {
+		if (!count($serverIds) || empty($serverIds))
+			return null;
+		$images = null;
+		foreach($serverIds as $serverId) {
+			$gImage = null;
+			if (download_image($serverId, $gImage))
+				$images .= '_img_'.$gImage;
+		}
+		return $images;
 	}
 
+	function download_image($serverId, &$gImage) {
+		$up_image = false;
+		// 图片命名
+		$x = '00';
+		$date = date('YmdHis');
+		while (file_exists(dirname(dirname(dirname(__FILE__))).'/photo/'.$date.$x.'.jpg')){
+			$x++;
+		}
+		$gImage = $date.$x.'.jpg';
 
-	function downlodimg($access_token,$serverId){
-
-		$targetName=dirname(__FILE__).'/demo/'.date('YmdHis').".jpg";
+		// 从微信服务器下载图片
+		$access_token = getAccess_token();
 		$url="http://file.api.weixin.qq.com/cgi-bin/media/get?access_token={$access_token}&media_id={$serverId}";
-		$ch=curl_init();
-		$fp=fopen($targetName, 'wb');
+		$ch = curl_init();
+		$fp = fopen($gImage, 'wb');
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_FILE, $fp);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_exec($ch);
+		$up_image = curl_exec($ch);
 		curl_close($ch);
 		fclose($fp);
-		//return  $targetName;
-  }
+
+		// 图片压缩(大于300kb)
+		if(filesize($gImage) > 307200){
+			$image = new edit_imagick($gImage);
+			$image->reSize($gImage);
+		}
+		return $up_image;
+	}
 ?>
