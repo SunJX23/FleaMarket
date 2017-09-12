@@ -487,6 +487,7 @@ function delete_detail(gid){
           						}else{
           							alert('---miao---');
           							formData.append("sid",sId);
+          							formData.append("total",length);
           							httpRequest(formData);
           						}
           						alert("---haha----"+sId[i].toString());
