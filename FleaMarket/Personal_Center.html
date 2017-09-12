@@ -190,28 +190,28 @@ function hide(){
 	win.style.display="none";
 }
 
-// (function (){
-// 	getData();
-// }())
+(function (){
+	Initialization();
+}())
 
 // function getData(){
 // 	httpRequest("?isLose=1");
 // 	httpRequest("?isLose=0");
 // }
 
-// function httpRequest(str){
-// 	var request = new XMLHttpRequest();
-// 	request.open("GET", "Personal_Center.php" + str, true);
-// 	request.responseType = 'json';
-// 	request.onload=function()
-// 	{
-// 		if (request.readyState==4 && request.status==200)
-// 		{
-// 			showData(this.response,"lostshow_datas");
-// 		}
-// 	}
-// 	request.send();
-// }
+function Initialization(str){
+	var request = new XMLHttpRequest();
+	request.open("GET", "Personal_Center.php" + str, true);
+	request.responseType = 'json';
+	request.onload=function()
+	{
+		if (request.readyState==4 && request.status==200)
+		{
+			showData(this.response,"lostshow_datas");
+		}
+	}
+	request.send();
+}
 
 
 //lostdata
@@ -477,6 +477,7 @@ function delete_detail(gid){
 					function upload() {
 						wx.uploadImage({
         					localId: lId[i],
+        					isShowProgressTips: 1,
         					success: function (res) {
           						i++;
           						//alert('已上传：' + i + '/' + length);
