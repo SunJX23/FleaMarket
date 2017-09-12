@@ -474,21 +474,24 @@ function delete_detail(gid){
 					return;
 				} else{
 					var i = 0, length = lId.length;
-					wx.uploadImage({
-        				localId: lId[i],
-        				success: function (res) {
-          					i++;
-          					//alert('已上传：' + i + '/' + length);
-          					sId.push(res.serverId);
-          					if (i < length) {
-            					upload();
-          					}
-          					alert("---haha----"+sId[i]);
-        				},
-        				fail: function (res) {
-          					alert("图片未上传成功"+JSON.stringify(res));
-        				}
-      				});
+					function upload() {
+						wx.uploadImage({
+        					localId: lId[i],
+        					success: function (res) {
+          						i++;
+          						//alert('已上传：' + i + '/' + length);
+          						sId.push(res.serverId);
+          						if (i < length) {
+            						upload();
+          						}
+          						alert("---haha----"+sId[i]);
+        					},
+        					fail: function (res) {
+          						alert("图片未上传成功"+JSON.stringify(res));
+        					}
+      					});
+					}
+					upload();
 					// wx.uploadImage({
 					// 	localId: lId[0],
 					// 	success: function (res) {
