@@ -207,17 +207,7 @@ function httpRequest(str){
 	{
 		if (request.readyState==4 && request.status==200)
 		{
-			// console.log(this.response);
-			switch(str){
-				case "?isLose=1": 
-					removeAllChild("lostshow_datas");
-					showData(this.response,"lostshow_datas");
-					break;
-				case "?isLose=0": 
-					removeAllChild("findshow_datas");
-					showData(this.response,"findshow_datas");
-					break;
-			}
+			showData(this.response,"lostshow_datas");
 		}
 	}
 	request.send();
@@ -265,12 +255,12 @@ function showData(lostdata,show_datas){
 
 			//状态按钮
 			// ------根据状态变换图标------- //
-			switch(lostdata[i].isback.toString()){
-				case '0'://未认领
-					break;
-				case '1'://已认领
-					break;
-			}
+			// switch(lostdata[i].isback.toString()){
+			// 	case '0'://未认领
+			// 		break;
+			// 	case '1'://已认领
+			// 		break;
+			// }
 
            	//修改按钮
 			var revise_button = document.createElement("button");
@@ -288,6 +278,14 @@ function showData(lostdata,show_datas){
         	deleteit_button.setAttribute("onclick","delete_detail("+gid+")");
         	document.getElementById("button_"+gid).appendChild(deleteit_button);
 
+   //      	//联系他按钮
+   //      	var contact_button = document.createElement("button");
+			// deleteit_button.innerHTML = "<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他";
+   //      	deleteit_button.setAttribute("id","contact_"+gid);
+   //      	deleteit_button.setAttribute("class","contact");
+   //      	deleteit_button.setAttribute("onclick","contact("+gid+")");
+   //      	document.getElementById("button_"+gid).appendChild(contact_button);
+
 			//显示图片
 			var ele = document.createElement("img");
 			ele.setAttribute("class","img-rounded");
@@ -299,17 +297,8 @@ function showData(lostdata,show_datas){
 
 			//显示文字
 			addPtags(lostdata[i].name,"物品：", gid);
-			if(lostdata[i].name.toString() === "饭卡"){
-				if(lostdata[i].cname){
-					addPtags(lostdata[i].cname,"姓名：", gid);
-				}
-				if(lostdata[i].cno){
-					addPtags(lostdata[i].cno,"卡号：", gid);
-				}
-			}
-			addPtags(lostdata[i].date,"时间：",gid);
-			addPtags(lostdata[i].place,"地点：",gid);
-			addPtags(lostdata[i].contact,"联系：",gid);
+			addPtags(lostdata[i].price,"价格：",gid);
+			addPtags(lostdata[i].detail,"详细说明：",gid);
 		}
 	}
 }
@@ -334,12 +323,12 @@ function removeAllChild(id){
 
 //页面跳转
 function jump(gid){
-	window.location.href = "showdetails.html?id="+gid;
+	// window.location.href = "showdetails.html?id="+gid;
 }
 
-function revise_detail(gid){
-	window.location.href = "Commodity_Information.html?id="+gid;
-}
+// function contact(gid){
+// 	window.location.href = "chat.html?id="+gid;
+// }
 
 function delete_detail(gid){
 	var sure = confirm("确认删除物品信息？");
@@ -354,10 +343,7 @@ function delete_detail(gid){
 				// console.log(this.response);
 				if(this.response){
 					alert(this.response.alert);
-					if(this.response.isLose.toString() === "1")
-						var parent = document.getElementById("lostshow_datas");
-					else
-						var parent = document.getElementById("findshow_datas");
+					var parent = document.getElementById("lostshow_datas");
 					var child = document.getElementById("big_"+gid);
 					parent.removeChild(child);
 				}
@@ -450,15 +436,19 @@ function delete_detail(gid){
 
 			if(!name){
 				alert("请选择关键字");
+				return;
 			}
 			if(!goodsName){
 				alert("请输入物品名称");
+				return;
 			}
 			if(!sale){
 				alert("请输入价格");
+				return;
 			}
 			if(!reg.test(sale)){
 				alert("价格必须为数字且最多为6位数");
+				return;
 			}
 			
 
@@ -478,7 +468,7 @@ function delete_detail(gid){
 				if (!lId) {
 					// alert('请先上传图片');
 					formData.append("sid",[]);
-					httpRequest();
+					httpRequest(formData);
 					return;
 				} else{
 					wx.uploadImage({
@@ -490,7 +480,7 @@ function delete_detail(gid){
 								alert(sId[i]);
 							}
 							// alert("图片已上传至微信服务器, serverId is :" + sId);
-							httpRequest();
+							httpRequest(formData);
 						},
 						fail: function (res) {
 							alert("图片未上传成功".JSON.stringify(res));
@@ -500,17 +490,19 @@ function delete_detail(gid){
 			}
 		}
 				
-
-		function httpRequest(){
+		function httpRequest(formData){
+			alert('---------------');
 			var request = new XMLHttpRequest();
-			request.open("POST","lost.php");
+			request.open("POST","back_end/Controller.php?type=uploadGoods");
 			request.responseType = 'json';
 			request.onload = function(){
 				if(request.readyState == 4 && request.status == 200){
-					// alert(this.response);
 					if(this.response){
 						var res = this.response;
-						alert(res);
+						if (res.ret === 1)
+							alert("上传成功");
+						else if (res.ret === -1)
+							alert(res.msg);
 					} else{
 						alert("未收到后端响应");
 					}

@@ -166,8 +166,8 @@
 
 	(function (){
 		getData();
-		claimButton();
-		getClaim();
+		// claimButton();
+		// getClaim();
 	}())
 
 	function httpRequest(formData,type){
@@ -177,25 +177,23 @@
 		request.onload = function(){
 			console.log(this.response);
 			if(request.readyState == 4 && request.status == 200 && this.response){
-				switch(type){
-					case "showdatas"://显示物品信息
-						showDatas(this.response);
-						break;
-					case "upclaim"://上传申请认领信息
-						afterUpClaim(this.response);
-						break;
-					case "claimbutton"://claim button初值
-						document.getElementById('upordrevise').innerHTML = this.response.toString();
-						break;
-					case "showclaim"://显示申请认领信息
-						showClaim(this.response);
-						break;
-					case "sure"://确认认领
-						afterSureButton(this.response);
-						break;
-					case "cancel"://取消认领
-						afterCancel(this.response);
-						break;
+					showDatas(this.response);
+					// 	break;
+					// case "upclaim"://上传申请认领信息
+					// 	afterUpClaim(this.response);
+					// 	break;
+					// case "claimbutton"://claim button初值
+					// 	document.getElementById('upordrevise').innerHTML = this.response.toString();
+					// 	break;
+					// case "showclaim"://显示申请认领信息
+					// 	showClaim(this.response);
+					// 	break;
+					// case "sure"://确认认领
+					// 	afterSureButton(this.response);
+					// 	break;
+					// case "cancel"://取消认领
+					// 	afterCancel(this.response);
+					// 	break;
 				}
 			}
 		}
@@ -203,49 +201,49 @@
 	}
 
 	//申请人信息请求
-	function getClaim(){
-		var formData = new FormData();
-		formData.append("id",gID);
-		formData.append("type","showclaim");
-		httpRequest(formData,"showclaim");
-	}
+	// function getClaim(){
+	// 	var formData = new FormData();
+	// 	formData.append("id",gID);
+	// 	formData.append("type","showclaim");
+	// 	httpRequest(formData,"showclaim");
+	// }
 
 	//申请按钮点击事件
-	function check_claimfn(){
-		console.log(document.getElementById('upordrevise').innerHTML);
-		switch(document.getElementById('upordrevise').innerHTML){
-			case "申请认领":
-				var phonenumber = prompt("请输入您的联系方式：","");
-				//alert( "确定认领该物品？");
-				if (phonenumber)
-				{
-					var formData = new FormData();
-					formData.append("id",gID);
-					formData.append("contact",phonenumber);
-					formData.append("type","upclaim");
-					console.log(formData);
-					httpRequest(formData,"upclaim");
-				}
-				break;
-			case "修改":
-				window.location.href = "Commodity_Information.html?id="+gID;
-				break;
-			case "取消认领":
-				var formData = new FormData();
-				formData.append("id",gID);
-				formData.append("type","cancel");
-				httpRequest(formData,"cancel");
-				break;
-		}		
-	}
+	// function check_claimfn(){
+	// 	console.log(document.getElementById('upordrevise').innerHTML);
+	// 	switch(document.getElementById('upordrevise').innerHTML){
+	// 		case "申请认领":
+	// 			var phonenumber = prompt("请输入您的联系方式：","");
+	// 			//alert( "确定认领该物品？");
+	// 			if (phonenumber)
+	// 			{
+	// 				var formData = new FormData();
+	// 				formData.append("id",gID);
+	// 				formData.append("contact",phonenumber);
+	// 				formData.append("type","upclaim");
+	// 				console.log(formData);
+	// 				httpRequest(formData,"upclaim");
+	// 			}
+	// 			break;
+	// 		case "修改":
+	// 			window.location.href = "Commodity_Information.html?id="+gID;
+	// 			break;
+	// 		case "取消认领":
+	// 			var formData = new FormData();
+	// 			formData.append("id",gID);
+	// 			formData.append("type","cancel");
+	// 			httpRequest(formData,"cancel");
+	// 			break;
+	// 	}		
+	// }
 
-	//初始化申请按钮
-	function claimButton(){
-		var formData = new FormData();
-		formData.append("id",gID);
-		formData.append("type","claimbutton");
-		httpRequest(formData,"claimbutton");
-	}
+	// //初始化申请按钮
+	// function claimButton(){
+	// 	var formData = new FormData();
+	// 	formData.append("id",gID);
+	// 	formData.append("type","claimbutton");
+	// 	httpRequest(formData,"claimbutton");
+	// }
 
 	//获取物品信息
 	function getData(){
@@ -267,96 +265,87 @@
 
 			//显示文字
 			addTags("p","物品："+data.name.toString(), "details","detail");
-			if(data.name.toString() === "饭卡"){
-				if(data.cname){
-					addTags("p","姓名："+data.cname.toString(), "details","detail");
-				}
-				if(data.cno){
-					addTags("p","卡号："+data.cno.toString(), "details","detail");
-				}
-			}
-			addTags("p","时间："+data.date.toString(),"details","detail");
-			addTags("p","地点："+data.place.toString(),"details","detail");
-			addTags("p","联系："+data.contact.toString(),"details","detail");
+			addTags("p","价格："+data.date.toString(),"details","detail");
+			addTags("p","详细说明："+data.detail.toString(),"details","detail");
 		}
 		else{
 			addTags("h4","对不起，没有找到该物品的信息","details","detail");
 		}
 	}
 
-	function afterUpClaim(data){
-		alert(data.alert.toString());
-		if(data.alert.toString() === "申请成功"){
+	// function afterUpClaim(data){
+	// 	alert(data.alert.toString());
+	// 	if(data.alert.toString() === "申请成功"){
 
-			if(document.getElementById("noclaim").style.display === "block"){
-				document.getElementById("noclaim").style.display = "none";
-				document.getElementById("claimer").style.display = "block";
-			}
+	// 		if(document.getElementById("noclaim").style.display === "block"){
+	// 			document.getElementById("noclaim").style.display = "none";
+	// 			document.getElementById("claimer").style.display = "block";
+	// 		}
 
-			document.getElementById('upordrevise').innerHTML = "取消认领";
-			var cID = data.id.toString();
-			var a_div = document.createElement("div");
-			a_div.setAttribute("id","claim"+cID);
-			a_div.setAttribute("class","xinxi");
-			element = document.getElementById("check_owner");
-			element.appendChild(a_div);
-			addTags("p",data.nick,"claim"+cID,"name");
-			addTags("p",data.contact,"claim"+cID,"cellphone");
-			addTags("p",data.time,"claim"+cID,"time");
-			// var sure_button = document.createElement("button");
-			// sure_button.setAttribute("class","surebutton");
-			// sure_button.setAttribute("id","surebutton"+cID);
-			// sure_button.setAttribute("onclick","sureButton("+cID+")");
-			// document.getElementById("claim"+cID).appendChild(sure_button);
-		}
-	}
+	// 		document.getElementById('upordrevise').innerHTML = "取消认领";
+	// 		var cID = data.id.toString();
+	// 		var a_div = document.createElement("div");
+	// 		a_div.setAttribute("id","claim"+cID);
+	// 		a_div.setAttribute("class","xinxi");
+	// 		element = document.getElementById("check_owner");
+	// 		element.appendChild(a_div);
+	// 		addTags("p",data.nick,"claim"+cID,"name");
+	// 		addTags("p",data.contact,"claim"+cID,"cellphone");
+	// 		addTags("p",data.time,"claim"+cID,"time");
+	// 		// var sure_button = document.createElement("button");
+	// 		// sure_button.setAttribute("class","surebutton");
+	// 		// sure_button.setAttribute("id","surebutton"+cID);
+	// 		// sure_button.setAttribute("onclick","sureButton("+cID+")");
+	// 		// document.getElementById("claim"+cID).appendChild(sure_button);
+	// 	}
+	// }
 
 	// 申请人信息显示
-	function showClaim(data){
+	// function showClaim(data){
 
-		if(data.length > 1){
+	// 	if(data.length > 1){
 
-			for(var i = 1; i < data.length; i++){
-				var cID = data[i].id.toString();
-				var a_div = document.createElement("p");
-				a_div.setAttribute("id","claim"+cID);
-				a_div.setAttribute("class","xinxi");
-				element = document.getElementById("check_owner");
-				element.appendChild(a_div);
+	// 		for(var i = 1; i < data.length; i++){
+	// 			var cID = data[i].id.toString();
+	// 			var a_div = document.createElement("p");
+	// 			a_div.setAttribute("id","claim"+cID);
+	// 			a_div.setAttribute("class","xinxi");
+	// 			element = document.getElementById("check_owner");
+	// 			element.appendChild(a_div);
 
-				addTags("p",data[i].nick,"claim"+cID,"name");
-				addTags("p",data[i].contact,"claim"+cID,"cellphone");
-				addTags("p",data[i].time,"claim"+cID,"time");
+	// 			addTags("p",data[i].nick,"claim"+cID,"name");
+	// 			addTags("p",data[i].contact,"claim"+cID,"cellphone");
+	// 			addTags("p",data[i].time,"claim"+cID,"time");
 
-				if(data[0].back.toString() === '1'){
-					//物品已被认领
-					var sure_button = document.createElement("button");
-					sure_button.setAttribute("class","surebutton");
-					sure_button.setAttribute("id","surebutton"+cID);
-					document.getElementById("claim"+cID).appendChild(sure_button);
-					document.getElementById("surebutton"+cID).disabled = true;
-					if(cID === data[0].success.toString()){
-						document.getElementById("surebutton"+cID).style.background = "url(./images/checkit.png)";
-					}
-					else{
-						document.getElementById("surebutton"+cID).style.background = "url(./images/checkout.png)";
-					}
-				}
-				else{
-					//物品未被认领
-					if(data[0].isme.toString() === '1'){
-						//我上传的物品
-						var sure_button = document.createElement("button");
-						sure_button.setAttribute("class","surebutton");
-						sure_button.setAttribute("id","surebutton"+cID);
-						sure_button.setAttribute("onclick","sureButton("+cID+")");
-						document.getElementById("claim"+cID).appendChild(sure_button);
-						document.getElementById("surebutton"+cID).style.background = "url(./images/check.png)";
-					}
-					else{
-						//不是我上传的物品
-					}
-				}
+	// 			if(data[0].back.toString() === '1'){
+	// 				//物品已被认领
+	// 				var sure_button = document.createElement("button");
+	// 				sure_button.setAttribute("class","surebutton");
+	// 				sure_button.setAttribute("id","surebutton"+cID);
+	// 				document.getElementById("claim"+cID).appendChild(sure_button);
+	// 				document.getElementById("surebutton"+cID).disabled = true;
+	// 				if(cID === data[0].success.toString()){
+	// 					document.getElementById("surebutton"+cID).style.background = "url(./images/checkit.png)";
+	// 				}
+	// 				else{
+	// 					document.getElementById("surebutton"+cID).style.background = "url(./images/checkout.png)";
+	// 				}
+	// 			}
+	// 			else{
+	// 				//物品未被认领
+	// 				if(data[0].isme.toString() === '1'){
+	// 					//我上传的物品
+	// 					var sure_button = document.createElement("button");
+	// 					sure_button.setAttribute("class","surebutton");
+	// 					sure_button.setAttribute("id","surebutton"+cID);
+	// 					sure_button.setAttribute("onclick","sureButton("+cID+")");
+	// 					document.getElementById("claim"+cID).appendChild(sure_button);
+	// 					document.getElementById("surebutton"+cID).style.background = "url(./images/check.png)";
+	// 				}
+	// 				else{
+	// 					//不是我上传的物品
+	// 				}
+	// 			}
 
 				// if(data[0].isme.toString() === '1'){
 				// 	//是我上传的物品
@@ -403,50 +392,50 @@
 				// 		//物品尚未认领
 				// 	}
 				// }
-			}
-		}
-		else{
-			document.getElementById("claimer").style.display = "none";
-			document.getElementById("noclaim").style.display = "block";
-		}
-	}
+	// 		}
+	// 	}
+	// 	else{
+	// 		document.getElementById("claimer").style.display = "none";
+	// 		document.getElementById("noclaim").style.display = "block";
+	// 	}
+	// }
 
-	//确认认领点击
-	function sureButton(cID){
-		// if(document.getElementById("surebutton"+cID).innerHTML === "确认"){
-			var sure = confirm("确认该物品已被认领？");
-			if(sure == true){
-				var formData = new FormData();
-				formData.append("id",gID);
-				formData.append("cid",cID);
-				formData.append("type","sure");
-				httpRequest(formData,"sure");
-			}
-		// }
-	}
+	// //确认认领点击
+	// function sureButton(cID){
+	// 	// if(document.getElementById("surebutton"+cID).innerHTML === "确认"){
+	// 		var sure = confirm("确认该物品已被认领？");
+	// 		if(sure == true){
+	// 			var formData = new FormData();
+	// 			formData.append("id",gID);
+	// 			formData.append("cid",cID);
+	// 			formData.append("type","sure");
+	// 			httpRequest(formData,"sure");
+	// 		}
+	// 	// }
+	// }
 
-	//确认认领后
-	function afterSureButton(data){
-		alert(data.alert);
-		if(data.alert.toString() === "确认成功"){
-			var sure = document.getElementsByClassName("surebutton");
-			for(var i = 0; i < sure.length; i++){
-				sure[i].style.background = "url(./images/checkout.png)";
-				sure[i].disabled = true;
-			}
-			document.getElementById("surebutton"+data.cid.toString()).style.background = "url(./images/checkit.png)";
-		}
-	}
+	// //确认认领后
+	// function afterSureButton(data){
+	// 	alert(data.alert);
+	// 	if(data.alert.toString() === "确认成功"){
+	// 		var sure = document.getElementsByClassName("surebutton");
+	// 		for(var i = 0; i < sure.length; i++){
+	// 			sure[i].style.background = "url(./images/checkout.png)";
+	// 			sure[i].disabled = true;
+	// 		}
+	// 		document.getElementById("surebutton"+data.cid.toString()).style.background = "url(./images/checkit.png)";
+	// 	}
+	// }
 
-	//确认取消后
-	function afterCancel(data){
-		alert(data.alert);
-		if(data.alert.toString() === "取消成功"){
-			var child = document.getElementById("claim"+data.cid.toString());
-			document.getElementById("check_owner").removeChild(child);
-			document.getElementById('upordrevise').innerHTML = "申请认领";
-		}
-	}
+	// //确认取消后
+	// function afterCancel(data){
+	// 	alert(data.alert);
+	// 	if(data.alert.toString() === "取消成功"){
+	// 		var child = document.getElementById("claim"+data.cid.toString());
+	// 		document.getElementById("check_owner").removeChild(child);
+	// 		document.getElementById('upordrevise').innerHTML = "申请认领";
+	// 	}
+	// }
 
 	function addTags(tag,text,vector,classname){
 		var ele = document.createElement(tag);
