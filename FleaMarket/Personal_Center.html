@@ -474,7 +474,7 @@ function delete_detail(gid){
 					return;
 				} else{
 					wx.uploadImage({
-						localId: lId,
+						localId: lId[0],
 						success: function (res) {
 							sId = res.serverId;
 							formData.append("sid",sId);
