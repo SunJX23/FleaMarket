@@ -477,7 +477,7 @@ function delete_detail(gid){
 					function upload() {
 						wx.uploadImage({
         					localId: lId[i],
-        					isShowProgressTips: 1,
+        					isShowProgressTips: 0,
         					success: function (res) {
           						i++;
           						//alert('已上传：' + i + '/' + length);
