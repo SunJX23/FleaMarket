@@ -125,7 +125,7 @@
 </head>
 <body>
     <div class="headshows">
-    	<h1>Commodity Information</h1>
+    	<h1>物品详情</h1>
     </div>
     <figure class="show_datas" id="shows">
         <div class="img_big" id="img_big">
@@ -143,23 +143,10 @@
 		</div>
         
 	</figure>
-    <span>
+<!--     <span>
     	<button class="claim" type="button" id="upordrevise" onclick="check_claimfn()"></button>
-    </span>
+    </span> -->
     <br/>
-    <p id="claimer" style="text-align: center;">申请人信息详情</p>
-    <p id="noclaim" style="text-align: center;display: none;">暂时没有人申请认领</p>
-    <div class="check_owner" id="check_owner">
-<!--     	<div class="name">
-
-    	</div>
-    	<div class="cellphone">
-    		
-    	</div>
-    	<div class="time">
-
-    	</div> -->
-    </div>
 </body> 
 <script>
 	var gID = window.location.search.split('=')[1].split('&')[0];
@@ -265,12 +252,23 @@
 
 			//显示文字
 			addTags("p","物品："+data.name.toString(), "details","detail");
-			addTags("p","价格："+data.date.toString(),"details","detail");
+			addTags("p","价格："+data.price.toString(),"details","detail");
 			addTags("p","详细说明："+data.detail.toString(),"details","detail");
+
+			//联系他按钮
+			var contact_button = document.createElement("button");
+			deleteit_button.innerHTML = "<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他";
+        	deleteit_button.setAttribute("id","contact_button");
+        	deleteit_button.setAttribute("class","contact");
+        	deleteit_button.setAttribute("onclick","contact("+data.uID+")");
 		}
 		else{
 			addTags("h4","对不起，没有找到该物品的信息","details","detail");
 		}
+	}
+
+	function contact(uID){
+		window.location.href = "chat.html?id="+uID;
 	}
 
 	// function afterUpClaim(data){

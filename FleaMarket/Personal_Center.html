@@ -499,9 +499,9 @@ function delete_detail(gid){
 				if(request.readyState == 4 && request.status == 200){
 					if(this.response){
 						var res = this.response;
-						if (res.ret === 1)
+						if (res.ret == 1)
 							alert("上传成功");
-						else if (res.ret === -1)
+						else if (res.ret == -1)
 							alert(res.msg);
 					} else{
 						alert("未收到后端响应");
