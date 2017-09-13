@@ -263,7 +263,7 @@
 			contact_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他';
         	contact_button.setAttribute("id","contact_button");
         	contact_button.setAttribute("class","contact");
-        	contact_button.setAttribute("onclick","contact("+data.uID+")");
+        	contact_button.setAttribute("onclick","contact('"+data.uID+"')");
         	$("#details").append($(contact_button))
 		}
 		else{
