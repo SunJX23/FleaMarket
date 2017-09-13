@@ -164,7 +164,7 @@
 		request.onload = function(){
 			console.log(this.response);
 			if(request.readyState == 4 && request.status == 200 && this.response){
-					showDatas(this.response);
+					showDatas(this.response.data);
 					// 	break;
 					// case "upclaim"://上传申请认领信息
 					// 	afterUpClaim(this.response);
