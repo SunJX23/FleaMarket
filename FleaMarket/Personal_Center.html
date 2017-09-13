@@ -137,8 +137,10 @@
 			left: 0;
 			right: 0;
 			margin: auto;
-			height: 500px;
-			width: 240px;
+			height: 80%;
+			width: 80%;
+			max-width: 750px;
+			min-height: 550px;
 		}
     </style>
 </head>
@@ -165,7 +167,7 @@
     <form id="window">
 	<!-- <form action="lost.php" method="post" enctype="multipart/form-data"> -->
 		<div class="face">
-			<button type="button" style="margin-left:95%;height: 25px;display: inline;" onclick="hide()"><span class="glyphicon glyphicon-remove" style="color:#FFD306;font-size:25px;"></span></button>
+			<button type="button" style="margin-left:95%;height: 25px;display: inline;" onclick="document.getElementById('window2').style.display = 'none';"><span class="glyphicon glyphicon-remove" style="color:#FFD306;font-size:25px;"></span></button>
 			<span class="glyphicon glyphicon-bookmark" style="color:#FFD306;font-size:25px" >上传物品</span>
 			<select name="name" id="chose" class="form-control" >
 				<option value="" disabled="disabled" selected="selected">关键字</option>
@@ -194,8 +196,8 @@
 		
 		<!-- <input type="submit" name="" class="submit"> -->
 	</form>
-	
-	<div id="Nancy-wrap">
+
+	<div id="Nancy-wrap" style="display:none">
 		<form id="window2">
 	<!-- <form action="lost.php" method="post" enctype="multipart/form-data"> -->
 		<div class="face">
