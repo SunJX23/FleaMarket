@@ -179,6 +179,7 @@
 </body>
 <script src="./js/jquery-3.1.1.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
 var win=document.getElementById("window");
 win.style.display="none";
@@ -190,15 +191,15 @@ function hide(){
 }
 
 (function (){
-	getData();
+	Initialization();
 }())
 
-function getData(){
-	httpRequest("?isLose=1");
-	httpRequest("?isLose=0");
-}
+// function getData(){
+// 	httpRequest("?isLose=1");
+// 	httpRequest("?isLose=0");
+// }
 
-function httpRequest(str){
+function Initialization(str){
 	var request = new XMLHttpRequest();
 	request.open("GET", "Personal_Center.php" + str, true);
 	request.responseType = 'json';
@@ -206,17 +207,7 @@ function httpRequest(str){
 	{
 		if (request.readyState==4 && request.status==200)
 		{
-			// console.log(this.response);
-			switch(str){
-				case "?isLose=1": 
-					removeAllChild("lostshow_datas");
-					showData(this.response,"lostshow_datas");
-					break;
-				case "?isLose=0": 
-					removeAllChild("findshow_datas");
-					showData(this.response,"findshow_datas");
-					break;
-			}
+			showData(this.response,"lostshow_datas");
 		}
 	}
 	request.send();
@@ -264,12 +255,12 @@ function showData(lostdata,show_datas){
 
 			//状态按钮
 			// ------根据状态变换图标------- //
-			switch(lostdata[i].isback.toString()){
-				case '0'://未认领
-					break;
-				case '1'://已认领
-					break;
-			}
+			// switch(lostdata[i].isback.toString()){
+			// 	case '0'://未认领
+			// 		break;
+			// 	case '1'://已认领
+			// 		break;
+			// }
 
            	//修改按钮
 			var revise_button = document.createElement("button");
@@ -287,6 +278,14 @@ function showData(lostdata,show_datas){
         	deleteit_button.setAttribute("onclick","delete_detail("+gid+")");
         	document.getElementById("button_"+gid).appendChild(deleteit_button);
 
+   //      	//联系他按钮
+   //      	var contact_button = document.createElement("button");
+			// deleteit_button.innerHTML = "<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他";
+   //      	deleteit_button.setAttribute("id","contact_"+gid);
+   //      	deleteit_button.setAttribute("class","contact");
+   //      	deleteit_button.setAttribute("onclick","contact("+gid+")");
+   //      	document.getElementById("button_"+gid).appendChild(contact_button);
+
 			//显示图片
 			var ele = document.createElement("img");
 			ele.setAttribute("class","img-rounded");
@@ -298,17 +297,8 @@ function showData(lostdata,show_datas){
 
 			//显示文字
 			addPtags(lostdata[i].name,"物品：", gid);
-			if(lostdata[i].name.toString() === "饭卡"){
-				if(lostdata[i].cname){
-					addPtags(lostdata[i].cname,"姓名：", gid);
-				}
-				if(lostdata[i].cno){
-					addPtags(lostdata[i].cno,"卡号：", gid);
-				}
-			}
-			addPtags(lostdata[i].date,"时间：",gid);
-			addPtags(lostdata[i].place,"地点：",gid);
-			addPtags(lostdata[i].contact,"联系：",gid);
+			addPtags(lostdata[i].price,"价格：",gid);
+			addPtags(lostdata[i].detail,"详细说明：",gid);
 		}
 	}
 }
@@ -333,12 +323,13 @@ function removeAllChild(id){
 
 //页面跳转
 function jump(gid){
-	window.location.href = "showdetails.html?id="+gid;
+	// window.location.href = "showdetails.html?id="+gid;
 }
 
-function revise_detail(gid){
-	window.location.href = "Commodity_Information.html?id="+gid;
-}
+// function contact(gid){
+// 	window.location.href = "chat.html?id="+gid;
+// }
+//
 
 function delete_detail(gid){
 	var sure = confirm("确认删除物品信息？");
@@ -353,10 +344,7 @@ function delete_detail(gid){
 				// console.log(this.response);
 				if(this.response){
 					alert(this.response.alert);
-					if(this.response.isLose.toString() === "1")
-						var parent = document.getElementById("lostshow_datas");
-					else
-						var parent = document.getElementById("findshow_datas");
+					var parent = document.getElementById("lostshow_datas");
 					var child = document.getElementById("big_"+gid);
 					parent.removeChild(child);
 				}
@@ -368,6 +356,189 @@ function delete_detail(gid){
 		request.send();
 	}
 }
+
+
+(function (){
+	Config();
+
+	function Config(){
+		var formData = new FormData();
+		formData.append("type","config");
+		formData.append("url",location.href.split('#')[0]);
+
+		var request = new XMLHttpRequest();
+		request.open("POST","back_end/wechat/JS_SDK.php");
+		request.responseType = "json";
+		request.onload = function()
+		{
+			if(request.readyState == 4 && request.status == 200)
+			{
+				wx.config({
+					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					appId: this.response.appId, // 必填，公众号的唯一标识
+					timestamp: this.response.timestamp, // 必填，生成签名的时间戳
+					nonceStr: this.response.noncestr, // 必填，生成签名的随机串
+					signature: this.response.signature,// 必填，签名，见附录1
+					jsApiList: ['checkJsApi','chooseImage','previewImage','uploadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+				});
+			}
+		}
+		request.send(formData);
+	}
+
+	wx.ready(function(){
+
+		// var images = {
+		// 	localId:[],
+		// 	serverId:[]
+		// };
+		var lId = [];
+		var sId = [];
+		document.querySelector('#upload').onclick = function(){
+			//判断当前版本是否支持指定的js接口，支持批量判断
+			wx.checkJsApi({
+				jsApiList:['chooseImage','previewImage','uploadImage'],
+				// success:function(res){
+				// }
+				fail:function(){
+					alert("本设备不支持图片上传");
+				}
+			});
+			wx.chooseImage({
+				count: 9, // 默认9
+				sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+				sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+				success:function(res){
+					lId = res.localIds;
+					// alert('已选择 ' + res.localIds.length + ' 张图片');
+					var div = document.getElementById("preview");
+					//console.log(div);
+					//if(div.hasChildNodes())
+					while (div.hasChildNodes()) { 
+						//当div下还存在子节点时 循环继续  
+						div.removeChild(div.firstChild);   
+					}
+					for(var i = 0; i < lId.length; i++){
+						var ele = document.createElement("img");
+						ele.setAttribute("class","img-rounded");
+						ele.src = lId[i].toString();
+						lId[i] = lId[i].toString();
+						div.appendChild(ele);
+					}
+				}
+			});
+		};
+		document.querySelector('#sure').onclick = function () {
+
+			var name = document.getElementsByName("name")[0].value;
+			var goodsName = document.getElementsByName("goodsName")[0].value;
+			var sale = document.getElementsByName("sale")[0].value;
+			var reg = new RegExp(/^[0-9]{1,6}([.][0-9]{1,5})?$/);
+
+			if(!name){
+				alert("请选择关键字");
+				return;
+			}
+			if(!goodsName){
+				alert("请输入物品名称");
+				return;
+			}
+			if(!sale){
+				alert("请输入价格");
+				return;
+			}
+			if(!reg.test(sale)){
+				alert("价格必须为数字且最多为6位数");
+				return;
+			}
+			
+
+			if(name && goodsName && sale){
+				var formData = new FormData();
+				formData.append("name",name);
+				formData.append("goodsName",goodsName);
+				formData.append("sale",sale);
+				// formData.append("place",document.getElementsByName("place")[0].value);
+				// formData.append("deplace",document.getElementsByName("deplace")[0].value);
+				// formData.append("detail",document.getElementsByName("detail")[0].value);
+				// formData.append("contact",contact);
+				// formData.append("datey",document.getElementsByName("datey")[0].value);
+				// formData.append("datem",document.getElementsByName("datem")[0].value);
+				// formData.append("dated",document.getElementsByName("dated")[0].value);
+				// console.log(formData);
+				if (!lId) {
+					// alert('请先上传图片');
+					var total=0;
+					formData.append("sid",[]);
+					formData.append("total",total);
+					httpRequest(formData);
+					return;
+				} else{
+					var i = 0, length = lId.length;
+					function upload() {
+						wx.uploadImage({
+        					localId: lId[i],
+        					isShowProgressTips: 0,
+        					success: function (res) {
+          						i++;
+          						//alert('已上传：' + i + '/' + length);
+          						sId.push(res.serverId);
+          						if (i < length) {
+            						upload();
+          						}else{
+          							formData.append("sid",sId);
+          							formData.append("total",length);
+									// alert("sid:"+JSON.stringify(sId));
+          							httpRequest(formData);
+          						}
+        					},
+        					fail: function (res) {
+          						alert("图片未上传成功"+JSON.stringify(res));
+        					}
+      					});
+					}
+					upload();
+					// wx.uploadImage({
+					// 	localId: lId[0],
+					// 	success: function (res) {
+					// 		sId = res.serverId;
+					// 		formData.append("sid",sId);
+					// 		for(var i = 0; i < sId.length; i++){
+					// 			alert(sId[i]);
+					// 		}
+					// 		// alert("图片已上传至微信服务器, serverId is :" + sId);
+					// 		httpRequest(formData);
+					// 	},
+					// 	fail: function (res) {
+					// 		alert("图片未上传成功"+JSON.stringify(res));
+					// 	}
+					// });
+				}
+			}
+		}
+				
+		function httpRequest(formData){
+			var request = new XMLHttpRequest();
+			request.open("POST","back_end/Controller.php?type=uploadGoods");
+			request.responseType = 'json';
+			request.onload = function(){
+				if(request.readyState == 4 && request.status == 200){
+					if(this.response){
+						var res = this.response;
+						if (res.ret === 1)
+							alert("上传成功");
+						else if (res.ret === -1)
+							alert(res.msg);
+					} else{
+						alert("未收到后端响应");
+					}
+				}
+			}
+			request.send(formData);
+		}
+	})
+
+}())
 </script>
 
 </html>

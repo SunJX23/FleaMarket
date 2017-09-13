@@ -12,6 +12,7 @@ class Error
         'DELETE_FAILED' => array(203, '数据删除失败'),
         'UPLOADIMG_FAILED' => array(204, '图片上传失败'),
         'GETDATA_FAILED'=> array(205, '获取数据失败'),
+        'CREATE_LOG_FAILED' => array(206, '创建数据库表失败'),
     );
 
     private $flea = array(

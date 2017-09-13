@@ -50,10 +50,10 @@
 			session_destroy();
 			Redirection();
 		} else {
-			echo '用户授权失败';
+			echo '用户授权失败1';
 		}
 	}else{
-	    echo "用户授权失败";
+	    echo "用户授权失败2";
 	}
 
 	function Redirection () {
