@@ -441,7 +441,7 @@ function getData(posturl,formData){
 		{
 			removeAllChild("datas");
 			// console.log(this.response);
-			showData(this.response);
+			showData(this.response.data);
 		}
 	}
 	request.send(formData);
@@ -560,20 +560,20 @@ function showData(data){
 			//显示文字
 			//var fixed = document.getElementById("data[i]")
 			addPtags(data[i].name,"物品：", gid);
-			if(data[i].name.toString() === "饭卡"){
-				//var flex = document.getElementById("detail[i]");
-				//flex.style.marginTop = "0px";
-				if(data[i].cname){
-					addPtags(data[i].cname,"姓名：", gid);
-				}
-				if(data[i].cno){
-					addPtags(data[i].cno,"卡号：", gid);
-				}
+			// if(data[i].name.toString() === "饭卡"){
+			// 	//var flex = document.getElementById("detail[i]");
+			// 	//flex.style.marginTop = "0px";
+			// 	if(data[i].cname){
+			// 		addPtags(data[i].cname,"姓名：", gid);
+			// 	}
+			// 	if(data[i].cno){
+			// 		addPtags(data[i].cno,"卡号：", gid);
+			// 	}
 				
-			}
-			addPtags(data[i].date,"时间：",gid);
-			addPtags(data[i].place,"地点：",gid);
-			addPtags(data[i].contact,"联系：",gid);
+			// }
+			addPtags(data[i].price,"价格：",gid);
+			// addPtags(data[i].place,"地点：",gid);
+			// addPtags(data[i].contact,"联系：",gid);
 		}
 	}
 	else{
