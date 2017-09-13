@@ -257,13 +257,14 @@
 			addTags("p","物品："+data.name.toString(), "details","detail");
 			addTags("p","价格："+data.price.toString(),"details","detail");
 			addTags("p","详细说明："+data.detail.toString(),"details","detail");
-
+			addTags("p","详细说明："+data.detail.toString(),"details","detail");
 			//联系他按钮
 			var contact_button = document.createElement("button");
-			deleteit_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他';
-        	deleteit_button.setAttribute("id","contact_button");
-        	deleteit_button.setAttribute("class","contact");
-        	deleteit_button.setAttribute("onclick","contact("+data.uID+")");
+			contact_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他';
+        	contact_button.setAttribute("id","contact_button");
+        	contact_button.setAttribute("class","contact");
+        	contact_button.setAttribute("onclick","contact("+data.uID+")");
+        	$("#details").append($(contact_button))
 		}
 		else{
 			addTags("h4","对不起，没有找到该物品的信息","details","detail");
