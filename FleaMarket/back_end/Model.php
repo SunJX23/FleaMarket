@@ -95,6 +95,7 @@ class Model {
         return $this->getGoodDatas($sql);
     }
 
+    // 获取商品数据
     protected function getGoodDatas ($sql) {
         $response = array();
         $response['ret'] = 1;
@@ -180,6 +181,18 @@ class Model {
             $response['data'][] = $data;
         }
         return $response;
+    }
+
+    public function getNewChat () {
+        $time = isset($_POST['time']) ? $_POST['time'] : null;
+        $u_uID = isset($_POST['uID']) ? $_POST['uID'] : null;
+        if (is_null($u_uID))
+            return $this->error_code->USER_LOST;
+        $log_name = $this->createChatLogs();
+        if (is_null($log_name))
+            return $this->error_code->UNKNOW_ERROR;
+        if ($log_name && isset($log_name['ret']) && $log_name['ret'] === -1)
+            return $log_name;
     }
 
     /* 获取联系人信息（单人）*/
