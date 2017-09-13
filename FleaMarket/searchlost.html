@@ -259,7 +259,7 @@
 						    <select name="order" id="" class="form-control">
 						    	<option value="" style="color: #aaa" disabled selected>价格排序</option>
 						    	<option value="">不排序</option>
-								<option value="orc">正序</option>
+								<option value="asc">正序</option>
 								<option value="desc">倒序</option>
 						    </select>
 						</li>
@@ -349,7 +349,7 @@ function Config(){
 	formData.append("url",location.href.split('#')[0]);
 
 	var request = new XMLHttpRequest();
-	request.open("POST","weixin/jssdk.php");
+	request.open("POST","back_end/wechat/JS_SDK.php");
 	request.responseType = "json";
 	request.onload = function()
 	{
@@ -458,7 +458,7 @@ function firstData(){
 	formData.append("order", obj.order);
 	formData.append("sale", obj.sale);
 	formData.append("name", obj.name);
-    getData("searchlost.php", formData);
+    getData("back_end/Controller.php?type=getPersonalData", formData);
 }
 
 var a;
