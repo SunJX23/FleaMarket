@@ -552,7 +552,7 @@ function showData(data){
 			//显示图片
 			var ele = document.createElement("img");
 			var pa = data[i].image[0];
-			var pat = "thumpimg.php?path=" + pa.toString();
+			var pat = pa.toString();
 			ele.src = pat;
 			var element = document.getElementById("img"+gid);
 			element.appendChild(ele);
