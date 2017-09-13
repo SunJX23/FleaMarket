@@ -459,6 +459,9 @@
 				child_speak_div.setAttribute("id",class_name+chatdata[i].time);
 				document.getElementById("speak"+contactsdata.u.uID).appendChild(child_speak_div);
 
+				autoWidth();
+				for_bottom();
+
 				var parent_node = document.getElementById(class_name+chatdata[i].time); // 父节点
 				
 				//speak_img
