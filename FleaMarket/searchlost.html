@@ -497,7 +497,7 @@ function textSerach(text){
 	if(text !== ""){
 		var formData = new FormData();
 		formData.append("text", text);
-		formData.append("isLose", "1");
+		// formData.append("isLose", "1");
 		getData("wenzisearch.php",formData);
 		removeAllChild("search_suggest");
 	}

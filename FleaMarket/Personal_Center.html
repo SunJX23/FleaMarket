@@ -201,13 +201,13 @@ function hide(){
 
 function Initialization(str){
 	var request = new XMLHttpRequest();
-	request.open("GET", "Personal_Center.php" + str, true);
+	request.open("GET", "back_end/Controller.php?type=getPersonalData", true);
 	request.responseType = 'json';
 	request.onload=function()
 	{
 		if (request.readyState==4 && request.status==200)
 		{
-			showData(this.response,"lostshow_datas");
+			showData(this.response.data,"lostshow_datas");
 		}
 	}
 	request.send();
@@ -289,8 +289,8 @@ function showData(lostdata,show_datas){
 			//显示图片
 			var ele = document.createElement("img");
 			ele.setAttribute("class","img-rounded");
-			var pa = lostdata[i].image;
-			var pat = "thumpimg.php?path=" + pa.toString();
+			var pa = lostdata[i].image[0];
+			var pat = pa.toString();
 			ele.src = pat;
 			var element = document.getElementById("img_"+gid);
 			element.appendChild(ele);
