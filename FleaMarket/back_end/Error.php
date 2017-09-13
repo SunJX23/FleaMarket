@@ -5,14 +5,15 @@ class Error
     static public $instance;
 
     private $error = array(
-        'PARAM_DROP'    => array(101, '参数缺失'),
-        'USER_LOST'     => array(102, '无用户信息'),
-        'INSERT_FAILED' => array(201, '数据插入失败'),
-        'UPDATE_FAILED' => array(202, '数据更新失败'),
-        'DELETE_FAILED' => array(203, '数据删除失败'),
-        'UPLOADIMG_FAILED' => array(204, '图片上传失败'),
-        'GETDATA_FAILED'=> array(205, '获取数据失败'),
-        'CREATE_LOG_FAILED' => array(206, '创建数据库表失败'),
+        'PARAM_DROP'          => array(101, '参数缺失'),
+        'USER_LOST'           => array(102, '无用户信息'),
+        'INSERT_FAILED'       => array(201, '数据插入失败'),
+        'UPDATE_FAILED'       => array(202, '数据更新失败'),
+        'DELETE_FAILED'       => array(203, '数据删除失败'),
+        'UPLOADIMG_FAILED'    => array(204, '图片上传失败'),
+        'GETDATA_FAILED'      => array(205, '获取数据失败'),
+        'CREATE_LOG_FAILED'   => array(206, '创建数据库表失败'),
+        'CHAT_YOURSELF'       => array(207, '不能和自己聊天')
     );
 
     private $flea = array(

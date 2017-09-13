@@ -12,6 +12,3 @@ if (!empty($type)) {
     echo json_encode($model->$type());
     $model->closeCon();
 }
-
-session_unset();
-session_destroy();

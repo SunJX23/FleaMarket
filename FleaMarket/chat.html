@@ -272,7 +272,7 @@
 			        </div>
 			        <div class="tip" style="float: right;width: 10%;"></div>  	
 			    </div>
-			    <div class="speak_window">
+			    <div class="speak_window" id="speak_window">
 						<!--<div class="speak_box">
 							<div class="answer">
 									<div class="heard_img left">
@@ -328,12 +328,14 @@
 	}
     //跳转到对话框
 	function turn_msg(uid){
+		if (typeof uid === "undefined") return;
 		var rotated = document.getElementsByClassName("container_two")[0];
 		rotated.style.transform = "rotateY(-180deg)";
 		autoWidth();
 		for_bottom();
 		var formdata = new FormData();
 		formdata.append('uID', uid);
+		console.log('uuuuuuuuuuuuid', uid);
 		httpRequest(formdata, "getChatLogs", "getChatDatas");
 	}
 
@@ -345,13 +347,12 @@
 	function httpRequest(formdata, url, type){
 
 		var request = new XMLHttpRequest();
-		request.open("POST", "back_end/Controller.php?type"+url, true);
+		request.open("POST", "back_end/Controller.php?type="+url, true);
 		request.responseType = 'json';
 		request.onload=function()
 		{
-			if (request.readyState==4 && request.status==200)
+			if (request.readyState === 4 && request.status === 200)
 			{
-				console.log(this.response);
 				var res = this.response;
 				if (res === null)
 					return;
@@ -359,15 +360,16 @@
 					alert(res.msg);
 					return;
 				}
+				if (res.total && res.total <= 0) return;
 				switch(type) {
 					case 'getConcatsDatas':
-						console.log(res.contact);
-						console.log(res.total);
-						console.log(res.data);
-						showContactsNick(res.contact.u.nick);
-						showContactsDatas(res.contact);
+						showContactsDatas(res.data);
 						break;
 					case 'getChatDatas': // time: null(初始化)  data[0].time (每隔一秒刷新获取新的聊天内容)
+						// console.log(res.contact);
+						// console.log(res.total);
+						// console.log(res.data);
+						showContactsNick(res.contact.u.unick);
 						showChatDatas(res.data,res.contact);
 						break;
 					case 'uploadChat':
@@ -381,22 +383,21 @@
 
 	//显示联系人信息
 	function showContactsDatas(contactsdata){
-
+		removeAllChild("show");
 		if(contactsdata != null){
 			for(var i = 0; i<contactsdata.length;i++){
 
 				var chat_msg = contactsdata[i].uID;
-				var uid = chat_msg.toString();
+				let uid = chat_msg.toString();
 
 				//chat div
 				var chat_div = document.createElement("div");
 				chat_div.setAttribute("id","chat_"+uid);
 				chat_div.setAttribute("class","speak_contacts");
-				// chat_div.setAttribute("onclick","turn_msg("+uid+")");
-				// chat_div.onClick = function (uid) {
-				// 	turn_msg(uid);
-				// }
-				document.getElementById(show).appendChild(chat_div);
+				document.getElementById("show").appendChild(chat_div);
+				document.getElementById("chat_"+uid).onclick = function () {
+					turn_msg(uid);
+				}
 
 				//img div
 				var img_div = document.createElement("div");
@@ -413,7 +414,7 @@
 				//显示头像
 				var ele = document.createElement("img");
 				ele.setAttribute("class","img-rounded");
-				var touxiang = contactsdata.u.headimg;
+				var touxiang = contactsdata[i].uimage;
 				ele.src = touxiang;
 				var element = document.getElementById("u_img_"+uid);
 				element.appendChild(ele);
@@ -422,8 +423,8 @@
 				var n_span = document.createElement("span");
 				n_span.setAttribute("id","n_span"+uid);
 				n_span.setAttribute("class","n_span");
-				var nicheng = contactsdata.u.nick;
-				n_span.src = nicheng;
+				var nicheng = contactsdata[i].unick;
+				n_span.innerHTML = nicheng;
 				var n_ele = document.getElementById("n_m" + uid);
 				n_ele.appendChild(n_span);
 			}
@@ -436,27 +437,28 @@
 		biaoti.setAttribute("class","u_nicheng");
 		var u_biaoti = nick;
 		biaoti.src = u_biaoti;
-		u_name.appendChild(biaoti);
+		document.getElementById("yourName").appendChild(biaoti);
 	}
 	//显示对话内容
 	function showChatDatas(chatdata,contactsdata) {
+		//对话框
+		var speak_div = document.createElement("div");
+		speak_div.setAttribute("class","speak_box");
+		speak_div.setAttribute("id","speak"+contactsdata.u.uID);
+		document.getElementById("speak_window").appendChild(speak_div);
+
 		if(chatdata != null){
 			for(var i = 0; i<chatdata.length;i++) {
 
-				//对话框
-				var speak_div = document.createElement("div");
-				speak_div.setAttribute("class","speak_box");
-				document.getElementById(speak_window).appendChild(speak_div);
-
-				/////////////////////////////////
-
 				var class_name = chatdata[i].isme === "i" ? "question" : "answer"; // 子节点类名
-				var parent_node = document.getElementById(class_name);; // 父节点
 				//speak_msg
 				var child_speak_div = document.createElement("div");
 				child_speak_div.setAttribute("class",class_name);
-				speak_div.appendChild(child_speak_div);
+				child_speak_div.setAttribute("id",class_name+chatdata[i].time);
+				document.getElementById("speak"+contactsdata.u.uID).appendChild(child_speak_div);
 
+				var parent_node = document.getElementById(class_name+chatdata[i].time); // 父节点
+				
 				//speak_img
 				var img_div = document.createElement("div");
 				var img_class_name = class_name === "question" ? "heard_img right" : "heard_img left";
@@ -471,7 +473,8 @@
 				//显示头像
 				var u_ele_img = document.createElement("img");
 				u_ele_img.setAttribute("class","img-rounded");
-				var u_touxiang = contactsdata[[chatdata[i].isme]].headimg;
+				console.log(contactsdata, chatdata[i]);
+				var u_touxiang = contactsdata[[chatdata[i].isme]].uimage;
 				u_ele_img.src = u_touxiang;
 				img_div.appendChild(u_ele_img);
 
@@ -614,6 +617,17 @@
 		ele.setAttribute("class",classname);
 		element = document.getElementById(vector);
 		element.appendChild(ele);
+	}
+
+
+	function removeAllChild(id) {
+		var div = document.getElementById(id);
+		//console.log(div);
+		//if(div.hasChildNodes())
+		while (div.hasChildNodes()) { 
+			//当div下还存在子节点时 循环继续  
+			div.removeChild(div.firstChild);
+		}
 	}
 </script>
 </html>

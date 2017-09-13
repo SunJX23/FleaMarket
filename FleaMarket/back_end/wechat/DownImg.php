@@ -18,7 +18,7 @@
 	function download_image($serverId, &$gname) {
 		$up_image = false;
 		// 图片命名
-		$x = '00';
+		$x = 0;
 		$date = date('YmdHis');
 		while (file_exists(dirname(dirname(dirname(__FILE__))).'/photo/'.$date.$x.'.jpg')){
 			$x++;
