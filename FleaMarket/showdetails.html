@@ -159,7 +159,7 @@
 
 	function httpRequest(formData,type){
 		var request = new XMLHttpRequest();
-		request.open("POST","showdetails.php");
+		request.open("POST","back_end/Controller.php?type=getGoodData");
 		request.responseType = 'json';
 		request.onload = function(){
 			console.log(this.response);
@@ -235,8 +235,8 @@
 	//获取物品信息
 	function getData(){
 		var formData = new FormData();
-		formData.append("id",gID);
-		formData.append("type","showdatas");
+		formData.append("ID",gID);
+		// formData.append("type","showdatas");
 		httpRequest(formData,"showdatas");
 	}
 
