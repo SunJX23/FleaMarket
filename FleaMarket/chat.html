@@ -235,6 +235,30 @@
 			border: none; 
 			margin-top: 10px;
 		}
+		.speak_contacts{
+			width: 100%;
+			height: 60px;
+			border-bottom: solid 1px #d4e1e6;
+			margin-top: 10px;
+		}
+		.img_box{
+			float: left;
+			width: 20%;
+			text-align: center;
+		}
+		.img-rounded{
+			width: 50px;
+			height: 50px; 
+			border-radius: 5px;
+		}
+		.n_m{
+			float: left;
+			width: 80%;
+		}
+		.n_span{
+			font-size: 14px;
+			color: #4f5258;
+		}
 	</style>   
 </head>
 <body>
@@ -280,16 +304,16 @@
 			        </div>  	
 			    </div>
         	    <div class="show" id="show" style="position: absolute; top: 60px; height: 90%;width: 100%;" onclick="turn_msg()">
-        	    	<div class="speak_contacts" style="width: 100%;height: 60px;border-bottom: solid 1px #d4e1e6;margin-top: 10px;">
-        	    		<div class="img_box" style="float: left;width: 20%;text-align: center;">
-        	    			<img src="images/头像.jpg" style="width: 50px;height: 50px; border-radius: 5px;">
+        	    	<!-- <div class="speak_contacts" >
+        	    		<div class="img_box" style="">
+        	    			<img src="images/头像.jpg" >
         	    		</div>
-        	    		<div style="float: left;width: 80%;">
+        	    		<div style="">
         	    			<span style="font-size: 14px;color: #4f5258;" class="nicheng">昵称</span>
         	    			<br>
         	    			<span style="font-size: 13px;color: #989b9c;">找个月黑风高的夜晚交易吧</span>
         	    		</div>
-        	    	</div>
+        	    	</div> -->
         	    </div>
         	</div>
         </div>
@@ -300,8 +324,7 @@
 	function changeback(){
 		var rotated = document.getElementsByClassName("container_two")[0];
 		rotated.style.transform = "rotateY(0deg)";
-		autoWidth();
-		for_bottom();
+		httpRequest(null, "getContacts", "getConcatsDatas");
 	}
     //跳转到对话框
 	function turn_msg(uid){
@@ -309,10 +332,14 @@
 		rotated.style.transform = "rotateY(-180deg)";
 		autoWidth();
 		for_bottom();
+		var formdata = new FormData();
+		formdata.append('uID', uid);
+		httpRequest(formdata, "getChatLogs", "getChatDatas");
 	}
 
 	(function(){
-		showContactsDatas();
+		// 获取联系人信息
+		httpRequest(null, "getContacts", "getConcatsDatas");
 	})();
 	
 	function httpRequest(formdata, url, type){
@@ -333,14 +360,14 @@
 					return;
 				}
 				switch(type) {
-					case 'getConcatsDatas': // time: null(初始化)  data[0].time (每隔一秒刷新获取新的聊天内容)
+					case 'getConcatsDatas':
 						console.log(res.contact);
 						console.log(res.total);
 						console.log(res.data);
 						showContactsNick(res.contact.u.nick);
 						showContactsDatas(res.contact);
 						break;
-					case 'getChatDatas':
+					case 'getChatDatas': // time: null(初始化)  data[0].time (每隔一秒刷新获取新的聊天内容)
 						showChatDatas(res.data,res.contact);
 						break;
 					case 'uploadChat':
@@ -349,8 +376,9 @@
 			}
 
 		}
-		request.send(formdata, url, type);
+		request.send(formdata);
 	}
+
 	//显示联系人信息
 	function showContactsDatas(contactsdata){
 
