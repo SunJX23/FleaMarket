@@ -32,28 +32,26 @@
 				// 将用户信息存入user表中
 				$con = mysqli_connect(HOST,USERNAME,PASSWORD,DB);
 				$con -> set_charset('utf8');
-				$query = mysqli_query($con, "select unick from user where uID = '$openid'");
+				$query = mysqli_query($con, "select unick,uimage from user where uID = '$openid'");
 				if (false === $query) {
 					$query = mysqli_query($con, "insert into user (uID,unick,uimage) values ('$openid','$unick','$headimgurl')");
 				} else {
-					$result = mysqli_fetch_array($query);
+					$result = mysqli_fetch_array($query, MYSQL_ASSOC);
 					if($result) {
 						if ($result['unick'] != $unick || $result['uimage'] != $headimgurl)
-							$query = mysqli_query($con, "update user set unick = '$unick' uimage = '$headimgurl' where uID = '$openid' ");
+							$query = mysqli_query($con, "update user set unick = '$unick', uimage = '$headimgurl' where uID = '$openid' ");
 					}
 					else {
 						$query = mysqli_query($con, "insert into user (uID,unick,uimage) values ('$openid','$unick','$headimgurl')");
 					}
 				}
 			}
-			session_unset();
-			session_destroy();
 			Redirection();
 		} else {
-			echo '用户授权失败1';
+			echo '<h1>用户授权失败，请退出重试</h1>';
 		}
 	}else{
-	    echo "用户授权失败2";
+	    echo '<h1>用户授权失败，请退出重试</h1>';
 	}
 
 	function Redirection () {
@@ -62,11 +60,11 @@
 
 		if (empty($_GET['state'])) return;
 
-		$url = 'searchlost';
+		$url = null;
 
 		switch ($_GET['state']) {
 			case '1':
-				$url = 'lost';
+				$url = 'chat';
 				break;
 			case '2':
 				$url = 'searchlost';

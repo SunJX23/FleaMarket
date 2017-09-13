@@ -47,20 +47,27 @@ class Model {
             return $this->error_code->INSERT_FAILED;
         return $response;
     }
-
+    
+    /* 按类别获取商品信息
+       前端参数(POST)：商品分类：name
+                      商品价格：sale
+                      排序方式：order
+       后端返回(JSON)：成功 ['ret' => 1]
+                      失败 ['ret' => -1, 'msg' => string(错误信息)]*/
     public function getGoodsByCategory () {
         $forms = array('name' => 'category', 'sale' => 'price', 'order' => 'order');;
         $data = array();
         $response = array();
-        $sql = 'select * from fleainfo where ';
+        $sql = 'select * from fleainfo ';
         $first = true;
         foreach ($forms as $key => $val) {
             $data[$val] = isset($_POST[$key]) ? $_POST[$key] : null;
             if (!$data[$val]) continue;
-            if ($first && $val !== 'order') $sql .= ' and ';
+            if ($val !== 'order')
+                $sql .= $first ? 'where ' : ' and ';
             switch ($val) {
                 case 'category':
-                    $sql .= 'category = '.$data[$val];
+                    $sql .= "category = '$data[$val]'";
                     $first = false;
                     break;
                 case 'price':
@@ -70,59 +77,38 @@ class Model {
                     $first = false;
                     break;
                 case 'order':
-                    $sql .= ' order by '.$data[$val];
+                    $sql .= ' order by ID '.$data[$val];
                     break;
             }
         }
-        $this->testfile($sql);
-        $query = mysqli_query($this->con,$sql);
-        if($query) {
-            while ($row = mysqli_fetch_array($query)) {
-                $result[] = $row;
-            }
-        }
+        return $this->getGoodDatas($sql);
     }
 
     public function getGoodsByText () {
-
+        
     }
 
     // 获取个人物品信息列表
     public function getPersonalData () {
         $uID = $this->i_uID;
-        $sql = "select ID,name,price,detail,image,category from fleainfo where uID = '$uID' order by ID desc";
+        $sql = "select * from fleainfo where uID = '$uID' order by ID desc";
+        return $this->getGoodDatas($sql);
+    }
+
+    protected function getGoodDatas ($sql) {
+        $response = array();
+        $response['ret'] = 1;
+        $result = array();
         $query = mysqli_query($this->con,$sql);
         if($query) {
-            while ($row = mysqli_fetch_array($query)) {
+            while ($row = mysqli_fetch_array($query, MYSQL_ASSOC)) {
+                $row['image'] = str_split($row['image'], 25);
                 $result[] = $row;
             }
         }
-        if (!isset($result))
-            return $this->error_code->GETDATA_FAILED;
-        $null="无";
-        $datas = array();
-        foreach($result as $xinxi)
-        {
-            $id = $xinxi['ID'];
-            $name = $xinxi['name'];
-            $price = $xinxi['price'];
-            $uID = $uID;
-            $detail = $xinxi['detail'];
-            $category = $xinxi['category'];
-            $image = $xinxi['image'];
-
-            $data = array();
-            $data['id'] = $id;
-            $data['name'] = $name;
-            $data['price'] = $price;
-            $data['uID'] = $uID;
-            $data['detail'] = $detail;
-            $data['category'] = $category;
-            $data['image'] = $image;
-
-            $datas[] = $data;
-        }
-        return $datas;
+        $response['total'] = mysqli_num_rows($query);
+        $response['data'] = $result;
+        return $response;
     }
 
     // 新增聊天记录表
@@ -131,7 +117,7 @@ class Model {
         $u_uID = isset($_POST['uID']) ? $_POST['uID'] : null;
         if ($i_uID === $u_uID)
             return $this->error_code->CHAT_YOURSELF;
-        if (is_null($u_uID))
+        if (is_null($u_uID) || is_null($i_uID))
             return $this->error_code->USER_LOST;
         $log_name = $i_uID < $u_uID ? $i_uID.'___'.$u_uID : $u_uID.'___'.$i_uID;
         $query = mysqli_query($this->con, "create table if not exists $log_name (logid bigint(10) not null, chatlog text, isme enum('i','u') not null)");
@@ -144,11 +130,14 @@ class Model {
        前端参数(POST)：聊天对方：uID
                       聊天内容：chatlog
        后端返回(JSON)：成功 ['ret' => 1]
-                      失败 ['ret' => -1, 'msg' => '错误信息']*/
+                      失败 ['ret' => -1, 'msg' => string(错误信息)]*/
     public function insertChatLogs () {
         $log_name = $this->createChatLogs();
+        if (is_null($log_name))
+            return $this->error_code->UNKNOW_ERROR;
+        if ($log_name && isset($log_name['ret']) && $log_name['ret'] === -1)
+            return $log_name;
         $time = time();
-        if (is_null($log_name)) return;
         $data['logid'] = $time;
         $data['chatlog'] = isset($_POST['chatlog']) ? $_POST['chatlog'] : null;
         $data['isme'] = explode('___', $log_name)[0] === $this->i_uID ? 'i' : 'u';
@@ -161,13 +150,17 @@ class Model {
     /* 获取聊天记录
        前端参数(POST)：聊天对方：uID
        后端返回(JSON)：成功 ['ret' => 1, ]
-                      失败 ['ret' => -1, 'msg' => '错误信息']*/
+                      失败 ['ret' => -1, 'msg' => string(错误信息)]*/
     public function getChatLogs () {
         $u_uID = isset($_POST['uID']) ? $_POST['uID'] : null;
         if (is_null($u_uID))
             return $this->error_code->USER_LOST;
         $log_name = $this->createChatLogs();
-        $query = mysqli_query($this->con, "select * from $log_name order by logid desc");
+        if (is_null($log_name))
+            return $this->error_code->UNKNOW_ERROR;
+        if ($log_name && isset($log_name['ret']) && $log_name['ret'] === -1)
+            return $log_name;
+        $query = mysqli_query($this->con, "select * from $log_name order by logid asc");
         $response = array();
         $response['ret'] = 1;
         $response['total'] = mysqli_num_rows($query);
@@ -204,9 +197,16 @@ class Model {
         return $result;
     }
 
-    /* 获取联系人信息（多人）*/
+    /* 获取联系人信息（多人）
+       前端参数(POST)：无
+       后端返回(JSON)：成功 ['ret' => 1, 'total' => int, 'data' => [
+                              {'uID' => string(用户ID), 'unick' => string(用户昵称), 'uimage' => string(用户头像)},...
+                           ]]
+                      失败 ['ret' => -1, 'msg' => string(错误信息)]*/
     public function getContacts () {
         $i_uID = $this->i_uID;
+        if (!$i_uID)
+            return $this->error_code->USER_LOST;
         $sql = "show tables like '%$i_uID%'";
         $query = mysqli_query($this->con, $sql);
         if ($query) {
