@@ -244,10 +244,13 @@
 	function showDatas(data){
 		if(data.id != null){
 			//显示图片
-			var ele = document.createElement("img");
-			ele.src = data.image.toString();
 			var element = document.getElementById("img_big");
-			element.appendChild(ele);
+			var imgs = data.image
+			for(var i in imgs){
+				var ele = document.createElement("img");
+				ele.src = imgs[i];
+				element.appendChild(ele);
+			}
 
 
 			//显示文字
@@ -257,7 +260,7 @@
 
 			//联系他按钮
 			var contact_button = document.createElement("button");
-			deleteit_button.innerHTML = "<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他";
+			deleteit_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他';
         	deleteit_button.setAttribute("id","contact_button");
         	deleteit_button.setAttribute("class","contact");
         	deleteit_button.setAttribute("onclick","contact("+data.uID+")");
