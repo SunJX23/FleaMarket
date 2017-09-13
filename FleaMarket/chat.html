@@ -148,6 +148,7 @@
 		}
 		.question,.answer{
 			margin-bottom:10px;
+			height: 50px;
 		}
 		.question{
 			text-align:right;
@@ -436,7 +437,7 @@
 		var biaoti = document.createElement("p");
 		biaoti.setAttribute("class","u_nicheng");
 		var u_biaoti = nick;
-		biaoti.src = u_biaoti;
+		biaoti.innerHTML = u_biaoti;
 		document.getElementById("yourName").appendChild(biaoti);
 	}
 	//显示对话内容
@@ -486,7 +487,7 @@
 				//显示文本
 				var u_ele_text = document.createElement("p");
 				var u_text = chatdata[i].chatlog;
-				u_ele_text.src = u_text;
+				u_ele_text.innerHTML = u_text;
 				text_div.appendChild(u_ele_text);
 
 				//////////////////////////////////
