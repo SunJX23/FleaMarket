@@ -446,6 +446,8 @@
 		speak_div.setAttribute("class","speak_box");
 		speak_div.setAttribute("id","speak"+contactsdata.u.uID);
 		document.getElementById("speak_window").appendChild(speak_div);
+		autoWidth();
+		for_bottom();
 
 		if(chatdata != null){
 			for(var i = 0; i<chatdata.length;i++) {
