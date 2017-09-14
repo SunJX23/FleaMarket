@@ -148,19 +148,6 @@
     <div class="headshows">
     	<h1>个人中心</h1>
     </div>
-    <div class="lost-find">
-        <div class="lost">
-           <div class="lost_title">
-           	   <h2>我的卖品</h2>
-           </div>
-           <div class="lostshow">
-                <figure class="lostshow_datas" id="lostshow_datas">
-				</figure>
-           	</div>
-        </div>
-        <br />
-        <hr/>
-    </div>
     <div>
     	<button type="button" class="btn btn-info" id="create"><span class="glyphicon glyphicon-plus" aria-hidden="true" style="font-size:25px" onclick="block()"></span></button>
     </div>
@@ -196,6 +183,20 @@
 		
 		<!-- <input type="submit" name="" class="submit"> -->
 	</form>
+    <div class="lost-find">
+        <div class="lost">
+           <div class="lost_title">
+           	   <h2>我的卖品</h2>
+           </div>
+           <div class="lostshow">
+                <figure class="lostshow_datas" id="lostshow_datas">
+				</figure>
+           	</div>
+        </div>
+        <br />
+        <hr/>
+    </div>
+    
 
 	<div id="Nancy-wrap" style="display:none">
 		<form id="window2">
@@ -305,7 +306,7 @@ function showData(lostdata,show_datas){
 			//button div
 			var b_div = document.createElement("div");
 			b_div.setAttribute("id","button_"+gid);
-			b_div.setAttribute("class","button");
+			b_div.setAttribute("class","button_new");
 			document.getElementById("big_"+gid).appendChild(b_div);
 
 			//状态按钮

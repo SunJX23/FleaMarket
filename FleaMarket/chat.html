@@ -208,7 +208,7 @@
 		    border-bottom: 13px solid transparent;
 		}
 		.answer_text p{
-			background:#eeeeee;
+			background:#efeeee;
 			float: right;
 		}
 		.question_text p{
@@ -222,17 +222,6 @@
 			border-bottom:5px solid transparent;
 			position:absolute;
 			top:25px;
-		}
-		.answer_text:after{
-			content: "";
-		    width: 0;
-		    height: 0;
-		    right: 100%;
-		    top: 38px;
-		    position: absolute;
-		    border-top: 13px solid transparent;
-		    border-right: 26px solid #088cb7;
-		    border-bottom: 13px solid transparent;
 		}
 		.answer_text i{
 			border-right:10px solid #eeeeee;
@@ -341,6 +330,7 @@
 	var senduid = null;
 	let lasttime = null;
 	let refresh = false;
+    var gid = window.location.search.split('=');
    //返回联系人界面
 	function changeback(){
 		refresh = false;
@@ -366,6 +356,7 @@
 
 	(function(){
 		// 获取联系人信息
+		turncheak(gid);
 		httpRequest(null, "getContacts", "getConcatsDatas");
 	})();
 	
@@ -409,7 +400,13 @@
 		}
 		request.send(formdata);
 	}
-
+    
+    function turncheak(gid){
+    	console.log(JSON.stringify(gid));
+        if(JSON.stringify(gid) !== '[""]'){
+       		turn_msg(gid[1].split('&')[0]);
+        }
+    }
 	//显示联系人信息
 	function showContactsDatas(contactsdata){
 		removeAllChild("show");
@@ -514,12 +511,6 @@
 				text_div.setAttribute("class",class_name+"_text");
 				parent_node.appendChild(text_div);
 
-				//speak_jiaobiao
-				var text_i = document.createElement("i");
-				//text_i.setAttribute("class",class_name+"_text");
-				parent_node.appendChild(text_i);
-
-
 				//显示头像
 				var u_ele_img = document.createElement("img");
 				u_ele_img.setAttribute("class","img-rounded");
@@ -534,6 +525,10 @@
 				text_div.appendChild(u_ele_text);
 				autoWidth();
 				for_bottom();
+
+				//显示气泡
+				var i_text = document.createElement("i");
+				text_div.appendChild(i_text);
 				
 			}
 		}
@@ -551,7 +546,7 @@
 		}
 	}
 
-	///////////测试,点击返回发送后
+	//点击返回发送后
 	function up_say(){
 		uid = senduid;
 		$('.write_list').remove();

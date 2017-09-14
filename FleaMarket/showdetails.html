@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
     <script src="./js/jquery-3.1.1.min.js"></script>
 	<title>show_details</title>
 	<style type="text/css">
@@ -121,6 +122,13 @@
 			color: #cac5c5;
 			transform: skew(-18deg);
 		}
+		.contact{
+			margin-bottom: 10px;
+			border: 0px;
+			width: 100px;
+			height: 40px;
+			border-radius: 10px;
+		}
 
 	</style>
 </head>
@@ -129,9 +137,7 @@
     	<h1>物品详情</h1>
     </div>
     <figure class="show_datas" id="shows">
-        <div class="img_big" id="img_big">
-        	<!-- <img src="" max-height="150px" alt=""> -->
-		</div>
+        
 		<div class="xinxi_box">
 			<div class="details" id="details">
 			<!-- <p>物品：<?php echo $sname ?></p>
@@ -141,6 +147,9 @@
 			<p>地点：<?php echo $splace ?></p>
 			<p id="phone_number">联系：17751776365</p> -->
 			</div>
+		</div>
+		<div class="img_big" id="img_big">
+        	<!-- <img src="" max-height="150px" alt=""> -->
 		</div>
         
 	</figure>
@@ -244,7 +253,20 @@
 	//显示物品信息
 	function showDatas(data){
 		if(data.ID != null){
-			//显示图片
+			//显示文字
+			addTags("p","物品："+data.name.toString(), "details","detail");
+			addTags("p","价格："+data.price.toString(),"details","detail");
+			addTags("p","详细说明："+data.detail.toString(),"details","detail");
+
+			//联系他按钮
+			var contact_button = document.createElement("button");
+			contact_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true">联系他</span>';
+        	contact_button.setAttribute("id","contact_button");
+        	contact_button.setAttribute("class","contact");
+        	contact_button.setAttribute("onclick","contact('"+data.uID+"')");
+        	$("#details").append($(contact_button))
+
+        	//显示图片
 			var element = document.getElementById("img_big");
 			var imgs = data.image
 			for(var i in imgs){
@@ -252,19 +274,6 @@
 				ele.src = imgs[i];
 				element.appendChild(ele);
 			}
-
-
-			//显示文字
-			addTags("p","物品："+data.name.toString(), "details","detail");
-			addTags("p","价格："+data.price.toString(),"details","detail");
-			addTags("p","详细说明："+data.detail.toString(),"details","detail");
-			//联系他按钮
-			var contact_button = document.createElement("button");
-			contact_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他';
-        	contact_button.setAttribute("id","contact_button");
-        	contact_button.setAttribute("class","contact");
-        	contact_button.setAttribute("onclick","contact('"+data.uID+"')");
-        	$("#details").append($(contact_button))
 		}
 		else{
 			addTags("h4","对不起，没有找到该物品的信息","details","detail");
