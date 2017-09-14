@@ -244,14 +244,7 @@
 	//显示物品信息
 	function showDatas(data){
 		if(data.ID != null){
-			//显示图片
-			var element = document.getElementById("img_big");
-			var imgs = data.image
-			for(var i in imgs){
-				var ele = document.createElement("img");
-				ele.src = imgs[i];
-				element.appendChild(ele);
-			}
+			
 
 
 			//显示文字
@@ -265,6 +258,15 @@
         	contact_button.setAttribute("class","contact");
         	contact_button.setAttribute("onclick","contact('"+data.uID+"')");
         	$("#details").append($(contact_button))
+
+        	//显示图片
+			var element = document.getElementById("img_big");
+			var imgs = data.image
+			for(var i in imgs){
+				var ele = document.createElement("img");
+				ele.src = imgs[i];
+				element.appendChild(ele);
+			}
 		}
 		else{
 			addTags("h4","对不起，没有找到该物品的信息","details","detail");
