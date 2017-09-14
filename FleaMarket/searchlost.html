@@ -540,7 +540,7 @@ function showData(data){
 			// if(data[i].isBack.toString() === "1"){//已认领
 				// var imgclass = "state1";
 			// }else{//未认领
-				var imgclass = "state0";
+				// var imgclass = "state0";
 			// }
 
 			var img_state0 = document.createElement("div")
@@ -553,7 +553,7 @@ function showData(data){
 			var ele = document.createElement("img");
 			var pa = data[i].image[0];
 			var pat = pa.toString();
-			ele.src = pat;
+			ele.src = "thumping.php?path="+pat;
 			var element = document.getElementById("img"+gid);
 			element.appendChild(ele);
 
@@ -571,7 +571,7 @@ function showData(data){
 			// 	}
 				
 			// }
-			addPtags(data[i].price,"价格：",gid);
+			addPtags(data[i].price,"价格：￥",gid);
 			// addPtags(data[i].place,"地点：",gid);
 			// addPtags(data[i].contact,"联系：",gid);
 		}
