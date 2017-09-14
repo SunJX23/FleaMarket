@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="./js/jquery-3.1.1.min.js"></script>
 	<title>show_details</title>
 	<style type="text/css">
 		.headshows{
@@ -159,12 +160,12 @@
 
 	function httpRequest(formData,type){
 		var request = new XMLHttpRequest();
-		request.open("POST","showdetails.php");
+		request.open("POST","back_end/Controller.php?type=getGoodData");
 		request.responseType = 'json';
 		request.onload = function(){
 			console.log(this.response);
 			if(request.readyState == 4 && request.status == 200 && this.response){
-					showDatas(this.response);
+					showDatas(this.response.data);
 					// 	break;
 					// case "upclaim"://上传申请认领信息
 					// 	afterUpClaim(this.response);
@@ -181,7 +182,7 @@
 					// case "cancel"://取消认领
 					// 	afterCancel(this.response);
 					// 	break;
-				}
+				// }
 			}
 		}
 		request.send(formData);
@@ -235,32 +236,35 @@
 	//获取物品信息
 	function getData(){
 		var formData = new FormData();
-		formData.append("id",gID);
-		formData.append("type","showdatas");
+		formData.append("ID",gID);
+		// formData.append("type","showdatas");
 		httpRequest(formData,"showdatas");
 	}
 
 	//显示物品信息
 	function showDatas(data){
-		if(data.id != null){
+		if(data.ID != null){
 			//显示图片
-			var ele = document.createElement("img");
-			ele.src = data.image.toString();
 			var element = document.getElementById("img_big");
-			element.appendChild(ele);
+			var imgs = data.image
+			for(var i in imgs){
+				var ele = document.createElement("img");
+				ele.src = imgs[i];
+				element.appendChild(ele);
+			}
 
 
 			//显示文字
 			addTags("p","物品："+data.name.toString(), "details","detail");
 			addTags("p","价格："+data.price.toString(),"details","detail");
 			addTags("p","详细说明："+data.detail.toString(),"details","detail");
-
 			//联系他按钮
 			var contact_button = document.createElement("button");
-			deleteit_button.innerHTML = "<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他";
-        	deleteit_button.setAttribute("id","contact_button");
-        	deleteit_button.setAttribute("class","contact");
-        	deleteit_button.setAttribute("onclick","contact("+data.uID+")");
+			contact_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他';
+        	contact_button.setAttribute("id","contact_button");
+        	contact_button.setAttribute("class","contact");
+        	contact_button.setAttribute("onclick","contact('"+data.uID+"')");
+        	$("#details").append($(contact_button))
 		}
 		else{
 			addTags("h4","对不起，没有找到该物品的信息","details","detail");

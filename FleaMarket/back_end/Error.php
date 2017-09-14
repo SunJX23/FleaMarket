@@ -5,6 +5,7 @@ class Error
     static public $instance;
 
     private $error = array(
+        'UNKNOW_ERROR'        => array(100, '未知错误'),
         'PARAM_DROP'          => array(101, '参数缺失'),
         'USER_LOST'           => array(102, '无用户信息'),
         'INSERT_FAILED'       => array(201, '数据插入失败'),

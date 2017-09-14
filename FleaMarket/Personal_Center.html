@@ -122,6 +122,26 @@
 			margin-top: 10px;
 			width: 100%;
 		}
+
+		#Nancy-wrap{
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+		}
+		#window2{
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+			height: 80%;
+			width: 80%;
+			max-width: 750px;
+			min-height: 550px;
+		}
     </style>
 </head>
 <body>
@@ -144,7 +164,7 @@
     <div>
     	<button type="button" class="btn btn-info" id="create"><span class="glyphicon glyphicon-plus" aria-hidden="true" style="font-size:25px" onclick="block()"></span></button>
     </div>
-    	<form id="window">
+    <form id="window">
 	<!-- <form action="lost.php" method="post" enctype="multipart/form-data"> -->
 		<div class="face">
 			<button type="button" style="margin-left:95%;height: 25px;display: inline;" onclick="hide()"><span class="glyphicon glyphicon-remove" style="color:#FFD306;font-size:25px;"></span></button>
@@ -176,6 +196,38 @@
 		
 		<!-- <input type="submit" name="" class="submit"> -->
 	</form>
+
+	<div id="Nancy-wrap" style="display:none">
+		<form id="window2">
+	<!-- <form action="lost.php" method="post" enctype="multipart/form-data"> -->
+		<div class="face">
+			<button type="button" style="margin-left:95%;height: 25px;display: inline;" onclick="document.getElementById('Nancy-wrap').style.display = 'none';"><span class="glyphicon glyphicon-remove" style="color:#FFD306;font-size:25px;"></span></button>
+			<span class="glyphicon glyphicon-bookmark" style="color:#FFD306;font-size:25px" >上传物品</span>
+			<select name="name2" id="chose2" class="form-control" >
+				<option value="" disabled="disabled" selected="selected">关键字</option>
+				<option value="书">书</option>
+				<option value="CD">CD</option>
+				<option value="衣服">衣服</option>
+				<option value="包">包</option>
+				<option value="生活用品">生活用品</option>
+				<option value="床上用品">床上用品</option>
+				<option value="配饰">配饰</option>
+				<option value="其他">其他</option>
+			</select>
+			<div class="form-group has-warning">
+				<input type="text" name="goodsName2" class="form-control" placeholder="物品名称">
+				<input type="text" name="sale2" class="form-control" placeholder="价格/￥">
+				<textarea class="form-control" rows="3" name="detail2" placeholder="详细描述"></textarea>
+			</div>
+			<button type="button"  class="upload" id="upload2" >添加图片</button>&nbsp;<span id="upload_tips"></span>
+			<div class="preview" id="preview">
+				<!-- 图片显示 -->
+			</div>
+			<!-- <input type="file" name="file" id="upload_none" style="display:none"/> -->
+			<button type="button" class="button" id="sure2"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+			
+		</div>
+	</div>
 </body>
 <script src="./js/jquery-3.1.1.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
@@ -201,25 +253,28 @@ function hide(){
 
 function Initialization(str){
 	var request = new XMLHttpRequest();
-	request.open("GET", "Personal_Center.php" + str, true);
+	request.open("GET", "back_end/Controller.php?type=getPersonalData", true);
 	request.responseType = 'json';
 	request.onload=function()
 	{
 		if (request.readyState==4 && request.status==200)
 		{
-			showData(this.response,"lostshow_datas");
+			showData(this.response.data,"lostshow_datas");
 		}
 	}
 	request.send();
 }
 
+function revise_detail(gid){
+	$('#Nancy-wrap').show();
+}
 
 //lostdata
 function showData(lostdata,show_datas){
 	if(lostdata != null){
 		for(var i=0; i<lostdata.length; i++){
 
-			var tmp = lostdata[i].id;
+			var tmp = lostdata[i].ID;
 			var gid = tmp.toString();
 
 			var big_div = document.createElement("div");
@@ -289,8 +344,8 @@ function showData(lostdata,show_datas){
 			//显示图片
 			var ele = document.createElement("img");
 			ele.setAttribute("class","img-rounded");
-			var pa = lostdata[i].image;
-			var pat = "thumpimg.php?path=" + pa.toString();
+			var pa = lostdata[i].image[0];
+			var pat = pa.toString();
 			ele.src = pat;
 			var element = document.getElementById("img_"+gid);
 			element.appendChild(ele);
