@@ -129,9 +129,7 @@
     	<h1>物品详情</h1>
     </div>
     <figure class="show_datas" id="shows">
-        <div class="img_big" id="img_big">
-        	<!-- <img src="" max-height="150px" alt=""> -->
-		</div>
+        
 		<div class="xinxi_box">
 			<div class="details" id="details">
 			<!-- <p>物品：<?php echo $sname ?></p>
@@ -141,6 +139,9 @@
 			<p>地点：<?php echo $splace ?></p>
 			<p id="phone_number">联系：17751776365</p> -->
 			</div>
+		</div>
+		<div class="img_big" id="img_big">
+        	<!-- <img src="" max-height="150px" alt=""> -->
 		</div>
         
 	</figure>
@@ -244,13 +245,11 @@
 	//显示物品信息
 	function showDatas(data){
 		if(data.ID != null){
-			
-
-
 			//显示文字
 			addTags("p","物品："+data.name.toString(), "details","detail");
 			addTags("p","价格："+data.price.toString(),"details","detail");
 			addTags("p","详细说明："+data.detail.toString(),"details","detail");
+
 			//联系他按钮
 			var contact_button = document.createElement("button");
 			contact_button.innerHTML = '<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>联系他';
