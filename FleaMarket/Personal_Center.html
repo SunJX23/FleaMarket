@@ -489,6 +489,7 @@ function delete_detail(gid){
 			var name = document.getElementsByName("name")[0].value;
 			var goodsName = document.getElementsByName("goodsName")[0].value;
 			var sale = document.getElementsByName("sale")[0].value;
+			var detail = document.getElementsByName("detail")[0].value;
 			var reg = new RegExp(/^[0-9]{1,6}([.][0-9]{1,5})?$/);
 
 			if(!name){
@@ -514,6 +515,7 @@ function delete_detail(gid){
 				formData.append("name",name);
 				formData.append("goodsName",goodsName);
 				formData.append("sale",sale);
+				formData.append("detail",detail);
 				// formData.append("place",document.getElementsByName("place")[0].value);
 				// formData.append("deplace",document.getElementsByName("deplace")[0].value);
 				// formData.append("detail",document.getElementsByName("detail")[0].value);
