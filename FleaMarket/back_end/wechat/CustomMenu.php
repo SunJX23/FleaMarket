@@ -23,23 +23,9 @@
 
 		},
 		{
+			"type":"view",
 			"name":"我的",
-			"sub_button":[
-			{
-				"type":"view",
-				"name":"我的",
-				"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Location.php&response_type=code&scope=snsapi_userinfo&state=3#wechat_redirect"
-			},
-			{
-				"type":"view",
-				"name":"测试",
-				"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Location.php&response_type=code&scope=snsapi_userinfo&state=4#wechat_redirect"
-			},
-			{
-				"type":"view",
-				"name":"柚子",
-				"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Location.php&response_type=code&scope=snsapi_userinfo&state=5#wechat_redirect"
-			}]
+			"url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx868a7ba7368b6e07&redirect_uri=http://115.29.38.30/FleaMarket/FleaMarket/back_end/Location.php&response_type=code&scope=snsapi_userinfo&state=3#wechat_redirect"
 		}]
 	}';
 	echo $jsonmenu;
