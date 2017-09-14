@@ -141,6 +141,7 @@
 			position: fixed;
 			top:70px;
 			left:0;
+			right: 0;
 		}
 		.speak_box{
 			margin-bottom:70px;
@@ -148,7 +149,7 @@
 		}
 		.question,.answer{
 			margin-bottom:10px;
-			height: 50px;
+			/*height: 50px;*/
 		}
 		.question{
 			text-align:right;
@@ -174,6 +175,7 @@
 			box-sizing:border-box;
 			position:relative;
 			display:table-cell;
+			max-width: 250px;
 			min-height:50px;
 		}
 		.question_text{
@@ -186,6 +188,7 @@
 			border-radius:10px;
 			padding:.5rem;
 			margin:0;
+			max-width: 250px;
 			font-size:14px;
 			line-height:28px;
 			box-sizing:border-box;
@@ -193,8 +196,20 @@
 			display:table-cell;
 			word-wrap:break-word;
 		}
+		.question_text p:after{
+			content: "";
+		    width: 0;
+		    height: 0;
+		    right: 100%;
+		    top: 38px;
+		    position: absolute;
+		    border-top: 13px solid transparent;
+		    border-right: 26px solid #088cb7;
+		    border-bottom: 13px solid transparent;
+		}
 		.answer_text p{
 			background:#eeeeee;
+			float: right;
 		}
 		.question_text p{
 			background:#42929d;
@@ -207,6 +222,17 @@
 			border-bottom:5px solid transparent;
 			position:absolute;
 			top:25px;
+		}
+		.answer_text:after{
+			content: "";
+		    width: 0;
+		    height: 0;
+		    right: 100%;
+		    top: 38px;
+		    position: absolute;
+		    border-top: 13px solid transparent;
+		    border-right: 26px solid #088cb7;
+		    border-bottom: 13px solid transparent;
 		}
 		.answer_text i{
 			border-right:10px solid #eeeeee;
@@ -292,8 +318,8 @@
 					        <input type="text" class="left" onKeyUp="keyup()" placeholder="请输入内容"  id="input_msg" />
 					    </div>   
 					</div>
-					<div class="wenwen_help right">
-					    <button onClick="up_say()" class="right">发送</button>
+					<div class="wenwen_help right" id="send">
+					    <button onClick="up_say()" class="right">发送</button> 
 					</div>
 					<div style="opacity:0;" class="clear"></div>
 				</div>
@@ -305,26 +331,23 @@
 			        </div>  	
 			    </div>
         	    <div class="show" id="show" style="position: absolute; top: 60px; height: 90%;width: 100%;" onclick="turn_msg()">
-        	    	<!-- <div class="speak_contacts" >
-        	    		<div class="img_box" style="">
-        	    			<img src="images/头像.jpg" >
-        	    		</div>
-        	    		<div style="">
-        	    			<span style="font-size: 14px;color: #4f5258;" class="nicheng">昵称</span>
-        	    			<br>
-        	    			<span style="font-size: 13px;color: #989b9c;">找个月黑风高的夜晚交易吧</span>
-        	    		</div>
-        	    	</div> -->
+        	    	
         	    </div>
         	</div>
         </div>
     </div>
 </body>
 <script>
+	var senduid = null;
+	let lasttime = null;
+	let refresh = false;
    //返回联系人界面
 	function changeback(){
+		refresh = false;
 		var rotated = document.getElementsByClassName("container_two")[0];
 		rotated.style.transform = "rotateY(0deg)";
+		document.getElementsByClassName('front')[0].style.display = "none";
+		document.getElementsByClassName('back')[0].style.display = "block";
 		httpRequest(null, "getContacts", "getConcatsDatas");
 	}
     //跳转到对话框
@@ -332,12 +355,13 @@
 		if (typeof uid === "undefined") return;
 		var rotated = document.getElementsByClassName("container_two")[0];
 		rotated.style.transform = "rotateY(-180deg)";
-		autoWidth();
-		for_bottom();
 		var formdata = new FormData();
 		formdata.append('uID', uid);
-		console.log('uuuuuuuuuuuuid', uid);
+		//console.log('uuuuuuuuuuuuid', uid);
+		document.getElementsByClassName('back')[0].style.display = "none";
+		document.getElementsByClassName('front')[0].style.display = "block";
 		httpRequest(formdata, "getChatLogs", "getChatDatas");
+		senduid = uid;
 	}
 
 	(function(){
@@ -367,13 +391,17 @@
 						showContactsDatas(res.data);
 						break;
 					case 'getChatDatas': // time: null(初始化)  data[0].time (每隔一秒刷新获取新的聊天内容)
-						// console.log(res.contact);
-						// console.log(res.total);
-						// console.log(res.data);
 						showContactsNick(res.contact.u.unick);
-						showChatDatas(res.data,res.contact);
+						showChatDatas(res.data,res.contact,true);
+						break;
+					case 'refreshChatDatas':
+						//console.log("refreshChatDatas");
+						//console.log(res.contact);
+						showChatDatas(res.data,res.contact,false);
+						refreshChat();
 						break;
 					case 'uploadChat':
+						showChatDatas(res.data,res.contact,false);
 						break;
 				}	
 			}
@@ -431,9 +459,10 @@
 			}
 		}
 	}
-
+   
 	//显示对方昵称
 	function showContactsNick(nick) {
+		removeAllChild("yourName");
 		var biaoti = document.createElement("p");
 		biaoti.setAttribute("class","u_nicheng");
 		var u_biaoti = nick;
@@ -441,14 +470,23 @@
 		document.getElementById("yourName").appendChild(biaoti);
 	}
 	//显示对话内容
-	function showChatDatas(chatdata,contactsdata) {
+	function showChatDatas(chatdata,contactsdata,clear) {
+		if (clear)
+			removeAllChild("speak_window");
 		//对话框
-		var speak_div = document.createElement("div");
-		speak_div.setAttribute("class","speak_box");
-		speak_div.setAttribute("id","speak"+contactsdata.u.uID);
-		document.getElementById("speak_window").appendChild(speak_div);
-		autoWidth();
-		for_bottom();
+		//console.log("showChatDatas");
+		//console.log(contactsdata.u.uID);
+		if (!document.getElementById("speak"+contactsdata.u.uID)) {
+
+			var speak_div = document.createElement("div");
+			speak_div.setAttribute("class","speak_box");
+			speak_div.setAttribute("id","speak"+contactsdata.u.uID);
+			document.getElementById("speak_window").appendChild(speak_div);
+		}
+		// autoWidth();
+		// for_bottom();
+		if (chatdata && chatdata[0] && chatdata[0].time)
+			lasttime = chatdata[0].time;
 
 		if(chatdata != null){
 			for(var i = 0; i<chatdata.length;i++) {
@@ -476,10 +514,15 @@
 				text_div.setAttribute("class",class_name+"_text");
 				parent_node.appendChild(text_div);
 
+				//speak_jiaobiao
+				var text_i = document.createElement("i");
+				//text_i.setAttribute("class",class_name+"_text");
+				parent_node.appendChild(text_i);
+
+
 				//显示头像
 				var u_ele_img = document.createElement("img");
 				u_ele_img.setAttribute("class","img-rounded");
-				console.log(contactsdata, chatdata[i]);
 				var u_touxiang = contactsdata[[chatdata[i].isme]].uimage;
 				u_ele_img.src = u_touxiang;
 				img_div.appendChild(u_ele_img);
@@ -489,93 +532,50 @@
 				var u_text = chatdata[i].chatlog;
 				u_ele_text.innerHTML = u_text;
 				text_div.appendChild(u_ele_text);
-
-				//////////////////////////////////
-
-				// //u_speak_msg
-				// var u_speak_div = document.createElement("div");
-				// u_speak_div.setAttribute("class","answer");
-				// document.getElementById(speak_box).appendChild(u_speak_div);
-
-				// //u_speak_img
-				// var u_img_div = document.createElement("div");
-				// u_img_div.setAttribute("class","heard_img left");
-				// document.getElementById(answer).appendChild(u_img_div);
-
-				// //u_speak_text
-				// var u_text_div = document.createElement("div");
-				// u_text_div.setAttribute("class","answer_text");
-				// document.getElementById(answer).appendChild(u_text_div);
-
-				// //i_speak_msg
-				// var i_speak_div = document.createElement("div");
-				// i_speak_div.setAttribute("class","question");
-				// document.getElementById(speak_box).appendChild(u_speak_div);
-
-				// //i_speak_img
-				// var i_img_div = document.createElement("div");
-				// i_img_div.setAttribute("class","heard_img right");
-				// document.getElementById(question).appendChild(i_img_div);
-
-				// //i_speak_text
-				// var i_text_div = document.createElement("div");
-				// i_text_div.setAttribute("class","question_text");
-				// document.getElementById(question).appendChild(i_text_div);
-
+				autoWidth();
+				for_bottom();
 				
-
-				// //显示u头像
-				// var u_ele_img = document.createElement("img");
-				// u_ele_img.setAttribute("class","img-rounded");
-				// var u_touxiang = contactsdata[[chatdata[i].isme]].headimg;
-				// u_ele_img.src = u_touxiang;
-				// element_ui.appendChild(u_ele_img);
-
-				// //显示u文本
-				// var u_ele_text = document.createElement("p");
-				// var u_text = chatdata[i].chatulog;
-				// u_ele_text.src = u_text;
-				// element_up.appendChild(u_ele_text);
-
-				// //显示i头像
-				// var i_ele_img = document.createElement("img");
-				// i_ele_img.setAttribute("class","img-rounded");
-				// var i_touxiang = contactsdata[[chatdata[i].isme]].headimg;
-				// i_ele_img.src = i_touxiang;
-				// element_ii.appendChild(i_ele_img);
-
-				// //显示i文本
-				// var i_ele_text = document.createElement("p");
-				// var i_text = chatdata[i].chatlog;
-				// i_ele_text.src = i_text;
-				// element_ip.appendChild(i_ele_text);
 			}
 		}
 	}
+
+	function refreshChat () {
+		refresh = true;
+		while (refresh) {
+			setTimeout( function(){
+				var formdata = new FormData();
+				formdata.append('time', lasttime);
+				formdata.append('uID',senduid);
+				httpRequest(formdata, 'getChatLogs', 'refreshChatDatas');
+			},1000);
+		}
+	}
+
 	///////////测试,点击返回发送后
 	function up_say(){
+		uid = senduid;
 		$('.write_list').remove();
-	    var text = $('.write_box input').val(),
-	        str  = '<div class="question">';
+	    var text = $('.write_box input').val();
+	        /*str  = '<div class="question">';
 	        str += '<div class="heard_img right"><img src="images/头像.jpg"/></div>';
 	        str += '<div class="question_text clear"><p>'+text+'</p><i></i>';
-	        str += '</div></div>';
+	        str += '</div></div>';*/
 	    if(text == ''){
 	        alert('请输入消息内容');
 	        $('.write_box input').focus();
 	    }else{
 	    	var formdata = new FormData();
 	    	formdata.append('chatlog', text);
-	    	formdata.append('uID', uID);
-	    	httpRequest(text);
-	        $('.speak_box').append(str);
+	    	formdata.append('uID', uid);
+	    	httpRequest(formdata, "insertChatLogs", "uploadChat");
+	        $('.speak_box').append();
 	        $('.write_box input').val('');
 	        $('.write_box input').focus();
 
 	        
 	        //对方回复间距
-	        autoWidth();
-	        for_bottom();
+	        //autoWidth();
+	        //for_bottom();
 	        /*setTimeout(function(){
 	        	//对方头像和回复内容
 	            var ans  = '<div class="answer"><div class="heard_img left"><img src="images/头像.jpg"/></div>';
@@ -610,20 +610,21 @@
 	}
 	function for_bottom(){
 		var speak_height = $('.speak_box').height();
-		$('.speak_box,.speak_window').animate({scrollTop:speak_height},500);
+		$('.speak_box,.speak_window').animate({scrollTop:speak_height});
 	}	
 	function autoWidth(){
-		$('.question_text').css('max-width',$('.question').width()-60);
+		// $('.question_text').css('max-width',$('.question').width()-60);
+		// $('.question_text').css('max-width',$('.question').width());
 	}
 	autoWidth();
-	function addTags(tag,text,vector,classname){
-		var ele = document.createElement(tag);
-		var node = document.createTextNode(text);
-		ele.appendChild(node);
-		ele.setAttribute("class",classname);
-		element = document.getElementById(vector);
-		element.appendChild(ele);
-	}
+	// function addTags(tag,text,vector,classname){
+	// 	var ele = document.createElement(tag);
+	// 	var node = document.createTextNode(text);
+	// 	ele.appendChild(node);
+	// 	ele.setAttribute("class",classname);
+	// 	element = document.getElementById(vector);
+	// 	element.appendChild(ele);
+	// }
 
 
 	function removeAllChild(id) {
