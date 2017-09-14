@@ -1,5 +1,5 @@
 <?php
-	require_once('config.php');
+	require_once(dirname(__FILE__).'/back_end/const.php');
 	$con = mysqli_connect(HOST,USERNAME,PASSWORD,DB);
 	$con -> set_charset("utf8");
 	$text = isset($_GET['text']) ? $_GET['text'] : null;
@@ -19,19 +19,22 @@
 			}
 		}
 	}
-	echo json_encode($maybetexts);
-	// var_dump($maybetexts)
+	echo json_encode(array());
 	mysqli_close($con);
 
 	function Select2($con, $text, &$maybetexts) {
-	$isLose = isset($_GET['isLose']) ? $_GET['isLose'] : "1";
-		$goodsdetail = array("gName", "gPlace", "gDePlace", "gDetail");
+		$goodsdetail = array('name', 'category', 'detail');
 		foreach ($goodsdetail as $searchtext) {
-			$sql = "select gName, {$searchtext} from goods where {$searchtext} LIKE '%{$text}%' and isLose = {$isLose}";
+			$sql = "select {$searchtext} from fleainfo where {$searchtext} LIKE '%{$text}%'";
 			$query = mysqli_query($con,$sql);
 			if($query){
-				while($row = mysqli_fetch_array($query)){
-					if($row[0] == "饭卡" && $searchtext == "gDetail"){
+				while($row = mysqli_fetch_array($query)) {
+					if ($searchtext === 'detail') {
+						if(preg_match('/^[\x{4e00}-\x{9fa5}]+$/u', $text)>0) {
+
+						}
+					}
+					if($row[0] == "饭卡" && $searchtext == "gDetail") {
 						if(preg_match('/^[\x{4e00}-\x{9fa5}]+$/u', $text)>0){
 							if(substr($row[1],0,2) == 'CN' && !in_array(substr($row[1],2), $maybetexts))
 								$maybetexts[] = substr($row[1],2);

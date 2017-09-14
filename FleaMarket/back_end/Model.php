@@ -47,7 +47,7 @@ class Model {
             return $this->error_code->INSERT_FAILED;
         return $response;
     }
-    
+
     /* 按类别获取商品信息
        前端参数(POST)：商品分类：name
                       商品价格：sale
@@ -73,20 +73,34 @@ class Model {
                 case 'price':
                     $low = explode('_', $data[$val])[0];
                     $high = explode('_', $data[$val])[1];
-                    $sql .= "price < $high and price > $low";
+                    $sql .= $low === '1000以上' ? "price > 1000" : "price < $high and price > $low";
                     $first = false;
                     break;
                 case 'order':
-                    $sql .= ' order by ID '.$data[$val];
+                    $sql .= ' order by price '.$data[$val];
                     break;
             }
         }
         return $this->getGoodDatas($sql);
     }
 
-    public function getGoodsByText () {
-        
+    public function getGoodData () {
+        $ID = isset($_POST['ID']) ? $_POST['ID'] : null;
+        if (!$ID)
+            return $this->error_code->PARAM_DROP;
+        $sql = "select * from fleainfo where ID = $ID";
+        $query = mysqli_query($this->con, $sql);
+        if ($query) {
+            $row = mysqli_fetch_array($query, MYSQL_ASSOC);
+            $row['image'] = str_split($row['image'], 25);
+            $result = $row;
+        }
+        $response['ret'] = 1;
+        $response['uID'] = $this->i_uID;
+        $response['data'] = $result;
+        return $response;
     }
+
 
     // 获取个人物品信息列表
     public function getPersonalData () {
@@ -118,7 +132,7 @@ class Model {
         $u_uID = isset($_POST['uID']) ? $_POST['uID'] : null;
         if ($i_uID === $u_uID)
             return $this->error_code->CHAT_YOURSELF;
-        if (is_null($u_uID) || is_null($i_uID))
+        if (is_null($u_uID) || is_null($i_uID) || $u_uID === 'undefined' || $i_uID === 'undefined' || $u_uID === 'null' || $i_uID === 'null')
             return $this->error_code->USER_LOST;
         $log_name = $i_uID < $u_uID ? $i_uID.'___'.$u_uID : $u_uID.'___'.$i_uID;
         $query = mysqli_query($this->con, "create table if not exists $log_name (logid bigint(10) not null, chatlog text, isme enum('i','u') not null)");
@@ -145,7 +159,11 @@ class Model {
         $query = $this->insertData($data, $log_name);
         if (!$query)
             return $this->error_code->INSERT_FAILED;
-        return array('ret' => 1);
+        $response['ret'] = 1;
+        $response['total'] = 1;
+        $response['contact'] = $this->getContact($_POST['uID']);
+        $response['data'] = array(array('time' => $time, 'chatlog' => $data['chatlog'], 'isme' => 'i'));
+        return $response;
     }
 
     /* 获取聊天记录
@@ -161,7 +179,11 @@ class Model {
             return $this->error_code->UNKNOW_ERROR;
         if ($log_name && isset($log_name['ret']) && $log_name['ret'] === -1)
             return $log_name;
-        $query = mysqli_query($this->con, "select * from $log_name order by logid asc");
+        $time = (isset($_POST['time'])) ? $_POST['time'] : null;
+        $sql = "select * from $log_name";
+        $sql .= $time ? " where logid > '$time'" : '';
+        $sql .= " order by logid asc";
+        $query = mysqli_query($this->con, $sql);
         $response = array();
         $response['ret'] = 1;
         $response['total'] = mysqli_num_rows($query);
@@ -181,18 +203,6 @@ class Model {
             $response['data'][] = $data;
         }
         return $response;
-    }
-
-    public function getNewChat () {
-        $time = isset($_POST['time']) ? $_POST['time'] : null;
-        $u_uID = isset($_POST['uID']) ? $_POST['uID'] : null;
-        if (is_null($u_uID))
-            return $this->error_code->USER_LOST;
-        $log_name = $this->createChatLogs();
-        if (is_null($log_name))
-            return $this->error_code->UNKNOW_ERROR;
-        if ($log_name && isset($log_name['ret']) && $log_name['ret'] === -1)
-            return $log_name;
     }
 
     /* 获取联系人信息（单人）*/

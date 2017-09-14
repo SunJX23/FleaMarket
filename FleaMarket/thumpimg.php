@@ -1,6 +1,5 @@
 <?php
-	require_once('class/imgedit.class.php');
-
+	require_once(dirname(__FILE__).'/back_end/base/ImgEdit.php');
 	if(isset($_GET['path']) && $_GET['path']){
 		$image = new edit_imagick($_GET['path']);
 		$image->thump();
